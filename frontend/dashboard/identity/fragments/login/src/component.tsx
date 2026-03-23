@@ -4,30 +4,33 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { MainLayoutComponent } from '@identity/main-layout';
 import { Box } from '@ui/layout';
 import { useForm } from 'react-hook-form';
-import { RegisterSchema, type TypeRegisterSchema } from '../schemas';
+import { LoginSchema, type TypeLoginSchema } from '../schemas';
 import { EmailInputComponent } from './email-input';
-import { NameInputComponent } from './name-input';
 import { PasswordInputComponent } from './password-input';
-import { RepeatPasswordInputComponent } from './repeat-password-input';
 import { SubmitButtonComponent } from './submit-button';
 import { TitleComponent } from './title/component';
 
-export function RegistrationComponent() {
-  const form = useForm<TypeRegisterSchema>({
-    resolver: zodResolver(RegisterSchema),
+export function LoginComponent() {
+  const form = useForm<TypeLoginSchema>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
-      name: '',
       password: '',
-      repeatPassword: '',
     },
   });
 
-  const onSubmit = (_data: TypeRegisterSchema) => {};
+  const onSubmit = (_data: TypeLoginSchema) => {};
 
   return (
     <MainLayoutComponent>
-      <Box as="main" width="$full" justifyContent="center" alignItems="center"  paddingTop={48} paddingBottom={48}>
+      <Box
+        as="main"
+        width="$full"
+        justifyContent="center"
+        alignItems="center"
+        paddingTop={48}
+        paddingBottom={48}
+      >
         <Box
           as="form"
           direction="column"
@@ -40,12 +43,7 @@ export function RegistrationComponent() {
         >
           <TitleComponent />
           <EmailInputComponent register={form.register} errors={form.formState.errors} />
-          <NameInputComponent register={form.register} errors={form.formState.errors} />
           <PasswordInputComponent register={form.register} errors={form.formState.errors} />
-          <RepeatPasswordInputComponent
-            register={form.register}
-            errors={form.formState.errors}
-          />
           <SubmitButtonComponent buttonProps={{ type: 'submit' }} />
         </Box>
       </Box>
