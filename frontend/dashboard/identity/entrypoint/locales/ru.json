@@ -1,0 +1,11 @@
+{
+  "HomePage": {
+    "eyebrow": "Старт",
+    "title": "Frontend",
+    "description": "Минимальный home fragment. Нужные страницы добавляй встроенными генераторами.",
+    "firstField": "Первое поле",
+    "firstFieldPlaceholder": "Пример ввода",
+    "primaryAction": "Основное действие",
+    "secondaryAction": "Вторичное действие"
+  }
+}
