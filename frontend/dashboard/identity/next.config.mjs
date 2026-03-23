@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin('./entrypoint/src/i18n/request.ts');
 const nextConfig = {
   transpilePackages: [
   "@identity/main-layout",
+  "@identity/registration",
   "@identity/home",
   "@ui/theme",
   "@ui/layout",

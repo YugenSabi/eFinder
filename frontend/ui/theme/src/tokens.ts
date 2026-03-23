@@ -1,7 +1,7 @@
 const colors = {
   background: '#f6f1e8',
   surface: '#fffaf3',
-  cardBg: '#f2e7d6',
+  cardBg: '#AEA7A333',
   contrastColor: '#447EAD',
   primary: '#d96c32',
   secondary: '#226b5b',

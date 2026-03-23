@@ -5,6 +5,10 @@ import type {InputProps} from './types';
 
 export function Input({
   label,
+  labelFont,
+  labelFontSize,
+  labelFontWeight,
+  labelColor = 'secondaryText',
   size = 'md',
   variant = 'filled',
   radius = 'md',
@@ -25,7 +29,7 @@ export function Input({
     ...fieldStyle(radiusValue),
     ...sizeStyle(size),
     ...variantStyle(variant, error),
-    borderColor: cssVarColor(borderColor),
+    ...(borderColor ? {borderColor: cssVarColor(borderColor)} : {}),
     backgroundColor: cssVarColor(bg) ?? variantStyle(variant, error).backgroundColor ?? cssVarColor('surface'),
   };
   const inputStyles: CSSProperties = {
@@ -35,14 +39,33 @@ export function Input({
     fontWeight,
     color: cssVarColor(textColor),
     padding: '0 14px',
+    ['--input-bg' as string]: String(
+      cssVarColor(bg) ?? variantStyle(variant, error).backgroundColor ?? cssVarColor('surface'),
+    ),
+    ['--input-color' as string]: String(cssVarColor(textColor) ?? inputBaseStyle().color),
+    ['--input-placeholder' as string]: String(cssVarColor('secondaryText')),
     ...style,
   };
 
   return (
     <label style={wrapperStyles}>
-      <span style={{fontSize: 14, color: cssVarColor('secondaryText')}}>{label}</span>
+      <span
+        style={{
+          fontSize: labelFontSize ?? 14,
+          fontFamily: cssVarFont(labelFont),
+          fontWeight: labelFontWeight,
+          color: cssVarColor(labelColor),
+        }}
+      >
+        {label}
+      </span>
       <span style={fieldStyles}>
-        <input {...props} style={inputStyles} placeholder={props.placeholder} />
+        <input
+          {...props}
+          className={props.className ? `ef-input ${props.className}` : 'ef-input'}
+          style={inputStyles}
+          placeholder={props.placeholder}
+        />
       </span>
     </label>
   );

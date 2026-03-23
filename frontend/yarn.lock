@@ -185,6 +185,7 @@ __metadata:
   resolution: "@dashboard/identity@workspace:dashboard/identity"
   dependencies:
     "@identity/home": "npm:*"
+    "@identity/registration": "npm:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
@@ -381,6 +382,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "@hookform/resolvers@npm:3.10.0"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 10c0/7ee44533b4cdc28c4fa2a94894c735411e5a1f830f4a617c580533321a9b901df0cc8c1e2fad81ad8d55154ebc5cb844cf9c116a3148ffae2bc48758c33cbb8e
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -442,6 +452,24 @@ __metadata:
     next: "npm:^16.2.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@identity/registration@npm:*, @identity/registration@workspace:dashboard/identity/fragments/registration":
+  version: 0.0.0-use.local
+  resolution: "@identity/registration@workspace:dashboard/identity/fragments/registration"
+  dependencies:
+    "@hookform/resolvers": "npm:^3.10.0"
+    "@ui/button": "npm:*"
+    "@ui/icons": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    "@ui/theme": "npm:*"
+    next: "npm:^16.2.1"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+    react-hook-form: "npm:^7.54.2"
+    zod: "npm:^3.24.2"
   languageName: unknown
   linkType: soft
 
@@ -4089,6 +4117,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-hook-form@npm:^7.54.2":
+  version: 7.72.0
+  resolution: "react-hook-form@npm:7.72.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18 || ^19
+  checksum: 10c0/c689992ef95fcf6a7e622aba447756c5d770b8f89efbd700e9432e127185cff687f8dd7439e235c177371abf5595a7c8dae6c6220b9c3ab29ccfdd543b0b5b9e
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -5063,6 +5100,13 @@ __metadata:
   peerDependencies:
     zod: ^3.25.0 || ^4.0.0
   checksum: 10c0/0ccfec48c46de1be440b719cd02044d4abb89ed0e14c13e637cd55bf29102f67ccdba373f25def0fc7130e5f15025be4d557a7edcc95d5a3811599aade689e1b
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.24.2":
+  version: 3.25.76
+  resolution: "zod@npm:3.25.76"
+  checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
   languageName: node
   linkType: hard
 

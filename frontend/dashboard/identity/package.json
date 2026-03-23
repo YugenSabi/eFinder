@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@identity/home": "*",
+    "@identity/registration": "*",
     "@ui/button": "*",
     "@ui/icons": "*",
     "@ui/input": "*",
