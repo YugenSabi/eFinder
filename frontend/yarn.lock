@@ -185,6 +185,7 @@ __metadata:
   resolution: "@dashboard/identity@workspace:dashboard/identity"
   dependencies:
     "@identity/home": "npm:*"
+    "@identity/login": "npm:*"
     "@identity/registration": "npm:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^19.0.0"
@@ -435,6 +436,20 @@ __metadata:
     "@ui/toast": "npm:*"
     next: "npm:^16.2.1"
     next-intl: "npm:*"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@identity/login@npm:*, @identity/login@workspace:dashboard/identity/fragments/login":
+  version: 0.0.0-use.local
+  resolution: "@identity/login@workspace:dashboard/identity/fragments/login"
+  dependencies:
+    "@ui/button": "npm:*"
+    "@ui/input": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next-intl: "npm:^4.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
   languageName: unknown
