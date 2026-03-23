@@ -35,3 +35,20 @@ button,
 input {
   font: inherit;
 }
+
+input.ef-input::placeholder {
+  color: var(--input-placeholder, #4c4135);
+  opacity: 1;
+}
+
+input.ef-input:-webkit-autofill,
+input.ef-input:-webkit-autofill:hover,
+input.ef-input:-webkit-autofill:focus,
+input.ef-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  background-color: transparent !important;
+  -webkit-text-fill-color: var(--input-color, #1d1a16) !important;
+  caret-color: var(--input-color, #1d1a16);
+  transition: background-color 9999s ease-in-out 0s;
+}

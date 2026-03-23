@@ -20,7 +20,9 @@ export function variantStyle(
 ): CSSProperties {
   if (error) {
     return {
-      border: '1px solid ' + cssVarColor('danger'),
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: cssVarColor('danger'),
       backgroundColor: cssVarColor('background'),
     };
   }
@@ -29,18 +31,24 @@ export function variantStyle(
     case 'filled':
       return {
         backgroundColor: cssVarColor('cardBg'),
-        border: 'none',
+        borderWidth: 0,
+        borderStyle: 'solid',
+        borderColor: 'transparent',
       };
     case 'ghost':
       return {
         backgroundColor: 'transparent',
-        border: 'none',
+        borderWidth: 0,
+        borderStyle: 'solid',
+        borderColor: 'transparent',
       };
     case 'outline':
     default:
       return {
         backgroundColor: cssVarColor('background'),
-        border: '1px solid ' + cssVarColor('border'),
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: cssVarColor('border'),
       };
   }
 }
@@ -69,9 +77,12 @@ export function fieldStyle(radius: string): CSSProperties {
 export function inputBaseStyle(): CSSProperties {
   return {
     flex: 1,
+    display: 'block',
+    minWidth: 0,
+    height: '100%',
     border: 'none',
     outline: 'none',
-    background: cssVarColor('cardBg'),
+    backgroundColor: 'transparent',
     fontFamily: cssVarFont('ui'),
     color: cssVarColor('primaryText'),
     width: '100%',

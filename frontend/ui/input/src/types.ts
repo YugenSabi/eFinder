@@ -6,6 +6,10 @@ export type InputVariant = 'filled' | 'outline' | 'ghost';
 
 export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'color'> & {
   label: string;
+  labelFont?: FontValue;
+  labelFontSize?: number | string;
+  labelFontWeight?: CSSProperties['fontWeight'];
+  labelColor?: ColorValue;
   size?: InputSize;
   variant?: InputVariant;
   radius?: RadiusToken;
