@@ -5,17 +5,23 @@ import type {ButtonSize, ButtonVariant} from './types';
 export function sizeStyle(size: ButtonSize): CSSProperties {
   switch (size) {
     case 'sm':
-      return {height: 36, fontSize: 13, padding: '0 12px'};
+      return {height: 34, fontSize: 12, padding: '0 11px'};
     case 'lg':
-      return {height: 56, fontSize: 16, padding: '0 18px'};
+      return {height: 50, fontSize: 15, padding: '0 16px'};
     case 'md':
     default:
-      return {height: 44, fontSize: 14, padding: '0 14px'};
+      return {height: 40, fontSize: 13, padding: '0 13px'};
   }
 }
 
 export function variantStyle(variant: ButtonVariant): CSSProperties {
   switch (variant) {
+    case 'ghost':
+      return {
+        backgroundColor: 'transparent',
+        border: 'none',
+        color: cssVarColor('primaryText'),
+      };
     case 'secondary':
       return {
         backgroundColor: 'transparent',

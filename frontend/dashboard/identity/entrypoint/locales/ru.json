@@ -1,4 +1,18 @@
 {
+  "MainLayout": {
+    "header": {
+      "brand": "eFinder",
+      "events": "Мероприятия",
+      "activity": "Активность",
+      "rating": "Рейтинг",
+      "docs": "Docs",
+      "launch": "Launch"
+    },
+    "footer": {
+      "copyright": "© eFinder, 2026",
+      "poweredBy": "powered by Olympians"
+    }
+  },
   "HomePage": {
     "eyebrow": "Старт",
     "title": "Frontend",
