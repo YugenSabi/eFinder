@@ -5,12 +5,12 @@ import type { InputSize, InputVariant } from './types';
 export function sizeStyle(size: InputSize): CSSProperties {
   switch (size) {
     case 'sm':
-      return { height: 36, fontSize: 13, padding: '0 10px' };
+      return { height: 34, fontSize: 12, padding: '0 10px' };
     case 'lg':
-      return { height: 56, fontSize: 16, padding: '0 16px' };
+      return { height: 50, fontSize: 15, padding: '0 14px' };
     case 'md':
     default:
-      return { height: 44, fontSize: 14, padding: '0 14px' };
+      return { height: 40, fontSize: 13, padding: '0 12px' };
   }
 }
 

@@ -2,16 +2,21 @@ const colors = {
   background: '#f6f1e8',
   surface: '#fffaf3',
   cardBg: '#f2e7d6',
+  contrastColor: '#447EAD',
   primary: '#d96c32',
   secondary: '#226b5b',
   border: '#e8d7c0',
   primaryText: '#1d1a16',
   secondaryText: '#4c4135',
+  mutedText: '#888888',
   danger: '#a63c2f',
 } as const;
 
 const fonts = {
   display: "Georgia, 'Times New Roman', serif",
+  headerBrand: "var(--font-underrated), Georgia, 'Times New Roman', serif",
+  headerNav: "var(--font-dela-gothic-one), Georgia, 'Times New Roman', serif",
+  footerText: "var(--font-geologica), Georgia, 'Times New Roman', serif",
   ui: "Georgia, 'Times New Roman', serif",
 } as const;
 

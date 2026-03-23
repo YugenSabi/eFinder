@@ -9,4 +9,7 @@ export type TextProps = {
   tone?: TextTone;
   color?: ColorValue;
   font?: FontValue;
+  fontSize?: number;
+  lineHeight?: number;
+  letterSpacing?: number;
 };
