@@ -4,12 +4,14 @@ import {useRouter} from 'next/navigation';
 import {Button} from '@ui/button';
 import {BellIcon, UserIcon} from '@ui/icons';
 import {Box} from '@ui/layout';
+import {useAuth} from '../../../../../lib/auth/context';
 import {useTranslations} from 'next-intl';
 import {HEADER_HEIGHT_PX} from './constants';
 
 export function MainHeader() {
   const t = useTranslations('MainLayout.header');
   const router = useRouter();
+  const {currentUser} = useAuth();
 
   return (
     <Box
@@ -83,7 +85,21 @@ export function MainHeader() {
       </Box>
       <Box position="relative" zIndex={1} gap={12} alignItems="center">
         <BellIcon />
-        <UserIcon />
+        {currentUser ? (
+          <Box cursor="pointer" onClick={() => router.push('/profile')}>
+            <UserIcon />
+          </Box>
+        ) : (
+          <Button
+            label={t('login')}
+            variant="ghost"
+            textColor="surface"
+            font="headerNav"
+            fontSize={16}
+            size="sm"
+            onClick={() => router.push('/auth/login')}
+          />
+        )}
       </Box>
     </Box>
   );

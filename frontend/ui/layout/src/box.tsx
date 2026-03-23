@@ -1,7 +1,7 @@
 import {createElement, type CSSProperties, type HTMLAttributes, type ReactNode} from 'react';
 import {cssVarColor, cssVarShadow, type ColorValue, type ShadowValue} from '@ui/theme';
 
-type BoxTag = 'div' | 'section' | 'main' | 'header' | 'footer';
+type BoxTag = 'div' | 'section' | 'main' | 'header' | 'footer' | 'form';
 type SizeToken = '$full';
 type CssSize = number | string | SizeToken;
 

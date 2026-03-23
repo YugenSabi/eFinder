@@ -55,7 +55,7 @@ selfservice:
 
     verification:
       enabled: true
-      ui_url: http://localhost:3000/auth/verification
+      ui_url: http://localhost:3000/auth/confirm
       lifespan: 1h
       use: code
       after:
