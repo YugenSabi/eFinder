@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  OrganizerProfileStatus,
   UserRole,
   type User,
 } from '@prisma/client';
@@ -24,6 +25,14 @@ export class EventsService {
 
     if (!organizer) {
       throw new NotFoundException('Organizer not found');
+    }
+
+    const organizerProfile = await this.prismaService.organizerProfile.findUnique({
+      where: { userId: organizerId },
+    });
+
+    if (!organizerProfile || organizerProfile.status !== OrganizerProfileStatus.APPROVED) {
+      throw new ForbiddenException('Organizer account is not approved');
     }
 
     const scoreWeight = await this.prismaService.eventScoreWeight.findUnique({
@@ -53,6 +62,7 @@ export class EventsService {
         basePoints: createEventDto.basePoints,
         difficultyFactor,
         rewardSummary: createEventDto.rewardSummary,
+        imageUrl: createEventDto.imageUrl,
         rewards: createEventDto.rewards?.length
           ? {
               create: createEventDto.rewards.map((reward) => ({
@@ -89,7 +99,11 @@ export class EventsService {
         startsAt: 'desc',
       },
       include: {
-        organizer: true,
+        organizer: {
+          include: {
+            organizerProfile: true,
+          },
+        },
         rewards: true,
       },
     });
@@ -99,8 +113,20 @@ export class EventsService {
     return this.prismaService.event.findUniqueOrThrow({
       where: {id},
       include: {
-        organizer: true,
+        organizer: {
+          include: {
+            organizerProfile: true,
+          },
+        },
         rewards: true,
+        participations: {
+          include: {
+            participant: true,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
   }

@@ -14,6 +14,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { ReserveInspectorModule } from './reserve-inspector/reserve-inspector.module';
 import { UsersModule } from './users/users.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { UsersModule } from './users/users.module';
     ActivityDashboardModule,
     ReserveInspectorModule,
     AdminSettingsModule,
+    UploadsModule,
   ],
 })
 export class AppModule {}

@@ -1,45 +1,57 @@
 import {
+  Body,
   Controller,
   Get,
   Post,
-  Body,
   Patch,
   Param,
-  Delete,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
+import { AuthService } from '../auth/auth.service';
 import { ParticipationsService } from './participations.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
-import { UpdateParticipationDto } from './dto/update-participation.dto';
+import { ReviewParticipationDto } from './dto/review-participation.dto';
 
 @Controller('participations')
 export class ParticipationsController {
-  constructor(private readonly participationsService: ParticipationsService) {}
+  constructor(
+    private readonly participationsService: ParticipationsService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
-  create(@Body() createParticipationDto: CreateParticipationDto) {
-    return this.participationsService.create(createParticipationDto);
+  async create(
+    @Req() request: Request,
+    @Body() createParticipationDto: CreateParticipationDto,
+  ) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+
+    return this.participationsService.create(currentUser, createParticipationDto);
   }
 
-  @Get()
-  findAll() {
-    return this.participationsService.findAll();
+  @Get('organizer/pending')
+  async findPending(@Req() request: Request) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+
+    return this.participationsService.findPendingForOrganizer(currentUser);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.participationsService.findOne(+id);
+  @Get('event/:eventId/me')
+  async findMyStatus(@Req() request: Request, @Param('eventId') eventId: string) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+
+    return this.participationsService.findMyStatus(currentUser, eventId);
   }
 
   @Patch(':id')
-  update(
+  async update(
+    @Req() request: Request,
     @Param('id') id: string,
-    @Body() updateParticipationDto: UpdateParticipationDto,
+    @Body() reviewParticipationDto: ReviewParticipationDto,
   ) {
-    return this.participationsService.update(+id, updateParticipationDto);
-  }
+    const currentUser = await this.authService.getAuthenticatedUser(request);
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.participationsService.remove(+id);
+    return this.participationsService.update(currentUser, id, reviewParticipationDto);
   }
 }

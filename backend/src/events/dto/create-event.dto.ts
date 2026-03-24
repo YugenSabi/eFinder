@@ -77,6 +77,11 @@ export class CreateEventDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(255)
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsString()
   organizerId?: string;
 
   @IsOptional()

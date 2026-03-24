@@ -13,6 +13,12 @@ enum UserRole {
   OBSERVER
 }
 
+enum OrganizerProfileStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum EventDirection {
   IT
   SOCIAL
@@ -44,6 +50,13 @@ model User {
   lastName           String?
   city               String?
   age                Int?
+  headline           String?
+  school             String?
+  telegram           String?
+  githubUrl          String?
+  behanceUrl         String?
+  vkUrl              String?
+  avatarUrl          String?
   role               UserRole             @default(PARTICIPANT)
   organizerProfile   OrganizerProfile?
   participantProfile ParticipantProfile?
@@ -59,13 +72,20 @@ model User {
 }
 
 model OrganizerProfile {
-  id                String   @id @default(cuid())
-  userId            String   @unique
+  id                String                 @id @default(cuid())
+  userId            String                 @unique
+  organizationName  String?
   bio               String?
-  trustScore        Float    @default(0)
-  totalEvents       Int      @default(0)
+  websiteUrl        String?
+  telegram          String?
+  vkUrl             String?
+  logoUrl           String?
+  status            OrganizerProfileStatus @default(PENDING)
+  trustScore        Float                  @default(0)
+  totalEvents       Int                    @default(0)
+  organizationRank  Int?
   commonRewardTypes String[]
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ParticipantProfile {
@@ -91,6 +111,7 @@ model Event {
   basePoints       Int               @default(0)
   difficultyFactor Float             @default(1)
   rewardSummary    String?
+  imageUrl         String?
   organizer        User              @relation("OrganizerEvents", fields: [organizerId], references: [id], onDelete: Cascade)
   rewards          EventReward[]
   participations   Participation[]

@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
+import { AuthModule } from '../auth/auth.module';
+import { PrismaModule } from '../prisma/prisma.module';
 import { ParticipationsService } from './participations.service';
 import { ParticipationsController } from './participations.controller';
 
 @Module({
+  imports: [PrismaModule, AuthModule],
   controllers: [ParticipationsController],
   providers: [ParticipationsService],
 })
