@@ -1,0 +1,16 @@
+{
+  "name": "@identity/event-details",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@identity/main-layout": "*",
+    "@ui/button": "*",
+    "@ui/layout": "*",
+    "@ui/text": "*",
+    "next": "^16.2.1",
+    "next-intl": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

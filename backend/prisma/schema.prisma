@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  ORGANIZER
+  PARTICIPANT
+  OBSERVER
+}
+
+enum OrganizerProfileStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EventDirection {
+  IT
+  SOCIAL
+  MEDIA
+  EDUCATION
+  VOLUNTEERING
+  OTHER
+}
+
+enum EventDifficulty {
+  BASIC
+  ADVANCED
+  STRATEGIC
+}
+
+enum EventStatus {
+  ACTIVE
+  COMPLETED
+}
+
+enum ParticipationStatus {
+  REGISTERED
+  CHECKED_IN
+  VERIFIED
+  REJECTED
+}
+
+model User {
+  id                 String               @id @default(cuid())
+  kratosIdentityId   String               @unique
+  email              String               @unique
+  isVerified         Boolean              @default(false)
+  firstName          String?
+  lastName           String?
+  city               String?
+  age                Int?
+  headline           String?
+  school             String?
+  telegram           String?
+  githubUrl          String?
+  behanceUrl         String?
+  vkUrl              String?
+  avatarUrl          String?
+  role               UserRole             @default(PARTICIPANT)
+  organizerProfile   OrganizerProfile?
+  participantProfile ParticipantProfile?
+  createdEvents      Event[]              @relation("OrganizerEvents")
+  participations     Participation[]
+  reviewsReceived    OrganizerReview[]    @relation("OrganizerReviewTarget")
+  reviewsWritten     OrganizerReview[]    @relation("OrganizerReviewAuthor")
+  ratingSnapshots    RatingSnapshot[]
+  observerFavorites  ObserverFavorite[]   @relation("ObserverFavorites")
+  favoritedBy        ObserverFavorite[]   @relation("ObservedParticipants")
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
+
+model OrganizerProfile {
+  id                String                 @id @default(cuid())
+  userId            String                 @unique
+  organizationName  String?
+  bio               String?
+  websiteUrl        String?
+  telegram          String?
+  vkUrl             String?
+  logoUrl           String?
+  status            OrganizerProfileStatus @default(PENDING)
+  trustScore        Float                  @default(0)
+  totalEvents       Int                    @default(0)
+  organizationRank  Int?
+  commonRewardTypes String[]
+  user              User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ParticipantProfile {
+  id                   String  @id @default(cuid())
+  userId               String  @unique
+  totalScore           Int     @default(0)
+  currentRank          Int?
+  reserveForecastScore Int     @default(0)
+  portfolioSummary     String?
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id               String            @id @default(cuid())
+  title            String
+  description      String
+  city             String?
+  direction        EventDirection
+  difficulty       EventDifficulty   @default(BASIC)
+  status           EventStatus       @default(ACTIVE)
+  startsAt         DateTime
+  endsAt           DateTime?
+  completedAt      DateTime?
+  organizerId      String
+  basePoints       Int               @default(0)
+  difficultyFactor Float             @default(1)
+  rewardSummary    String?
+  imageUrl         String?
+  organizer        User              @relation("OrganizerEvents", fields: [organizerId], references: [id], onDelete: Cascade)
+  rewards          EventReward[]
+  participations   Participation[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model EventScoreWeight {
+  id         String          @id @default(cuid())
+  direction  EventDirection
+  difficulty EventDifficulty
+  weight     Float           @default(1)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@unique([direction, difficulty])
+}
+
+model EventReward {
+  id             String @id @default(cuid())
+  eventId        String
+  place          Int    @default(1)
+  title          String
+  description    String?
+  additionalInfo String?
+  platformPoints Int    @default(0)
+  points         Int    @default(0)
+  event          Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, place])
+}
+
+model Participation {
+  id               String              @id @default(cuid())
+  eventId          String
+  participantId    String
+  status           ParticipationStatus @default(REGISTERED)
+  place            Int?
+  qrCodeToken      String?             @unique
+  verifiedAt       DateTime?
+  organizerComment String?
+  scoreAwarded     Int                 @default(0)
+  event            Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participant      User                @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@unique([eventId, participantId])
+}
+
+model OrganizerReview {
+  id          String   @id @default(cuid())
+  organizerId String
+  authorId    String
+  rating      Int
+  comment     String?
+  organizer   User     @relation("OrganizerReviewTarget", fields: [organizerId], references: [id], onDelete: Cascade)
+  author      User     @relation("OrganizerReviewAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
+model RatingSnapshot {
+  id             String         @id @default(cuid())
+  userId         String
+  direction      EventDirection?
+  totalScore     Int
+  ratingPosition Int?
+  eventsCount    Int            @default(0)
+  createdAt      DateTime       @default(now())
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ObserverFavorite {
+  id            String   @id @default(cuid())
+  observerId    String
+  participantId String
+  createdAt     DateTime @default(now())
+  observer      User     @relation("ObserverFavorites", fields: [observerId], references: [id], onDelete: Cascade)
+  participant   User     @relation("ObservedParticipants", fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([observerId, participantId])
+}

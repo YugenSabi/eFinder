@@ -1,0 +1,95 @@
+import {useRouter} from 'next/navigation';
+import {Button} from '@ui/button';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import {EventCardTags} from './tags';
+
+export type EventCardModel = {
+  id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  imageLabel?: string;
+  imageUrl?: string;
+};
+
+type CardComponentProps = {
+  event: EventCardModel;
+};
+
+export function CardComponent({event}: CardComponentProps) {
+  const router = useRouter();
+
+  return (
+    <Box
+      gap={10}
+      alignItems="flex-start"
+      style={{
+        flexWrap: 'nowrap',
+        boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)',
+      }}
+      padding={10}
+      backgroundColor="background"
+      borderRadius={20}
+    >
+      <Box
+        width={220}
+        minWidth={220}
+        height={220}
+        borderRadius={20}
+        backgroundColor="cardBg"
+        justifyContent="center"
+        alignItems="center"
+        overflow="hidden"
+        style={{flex: '0 0 164px'}}
+      >
+        {event.imageUrl ? (
+          <img
+            src={event.imageUrl}
+            alt={event.title}
+            style={{width: '100%', height: '100%', objectFit: 'cover'}}
+          />
+        ) : (
+          <Text font="headerNav" fontSize={22} color="secondaryText">
+            {event.imageLabel ?? 'Image'}
+          </Text>
+        )}
+      </Box>
+
+      <Box direction="column" gap={8} style={{flex: '1 1 auto'}}>
+        <Text font="headerNav" fontSize={18}>
+          {event.title}
+        </Text>
+
+        <Box
+          style={{
+            lineHeight: 1.35,
+            display: '-webkit-box',
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
+          <Text font="footerText" fontSize={11}>
+            {event.description}
+          </Text>
+        </Box>
+
+        <EventCardTags tags={event.tags} />
+
+        <Box style={{alignSelf: 'flex-start'}}>
+          <Button
+            label="Подробнее"
+            size="md"
+            bg="contrastColor"
+            textColor="surface"
+            font="headerNav"
+            fontSize={10}
+            style={{height: 25, padding: '10px', borderRadius: '7px'}}
+            onClick={() => router.push(`/events/${event.id}`)}
+          />
+        </Box>
+      </Box>
+    </Box>
+  );
+}
