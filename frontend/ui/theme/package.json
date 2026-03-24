@@ -1,6 +1,0 @@
-{
-  "name": "@ui/theme",
-  "version": "1.0.0",
-  "private": true,
-  "main": "src/index.ts"
-}
