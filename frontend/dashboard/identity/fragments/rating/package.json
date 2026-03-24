@@ -1,15 +1,14 @@
 {
-  "name": "@identity/profile",
+  "name": "@identity/rating",
   "version": "1.0.0",
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
     "@identity/main-layout": "*",
-    "@ui/button": "*",
+    "@ui/icons": "*",
     "@ui/layout": "*",
     "@ui/text": "*",
-    "next": "*",
-    "next-intl": "*",
+    "next": "^16.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }
