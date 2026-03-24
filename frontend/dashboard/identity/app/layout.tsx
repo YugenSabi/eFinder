@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const currentUser = await getServerCurrentUser();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${underratedFont.variable} ${geologicaFont.variable} ${delaGothicOneFont.variable}`}>
         <AppProviders locale={locale} messages={messages} initialUser={currentUser}>
           {children}

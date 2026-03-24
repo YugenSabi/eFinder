@@ -11,6 +11,8 @@
     "check": "yarn lint && yarn typecheck"
   },
   "dependencies": {
+    "@identity/activity": "*",
+    "@identity/events": "*",
     "@identity/home": "*",
     "@identity/login": "*",
     "@identity/registration": "*",
