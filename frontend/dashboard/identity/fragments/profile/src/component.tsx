@@ -93,7 +93,7 @@ export function ProfileComponent() {
         <AdminProfileComponent loggingOut={loggingOut} onLogout={logout} />
       ) : null}
       {currentUser.role === 'ORGANIZER' ? (
-        <OrganizerProfileComponent loggingOut={loggingOut} onLogout={logout} />
+        <OrganizerProfileComponent currentUser={currentUser} />
       ) : null}
       {currentUser.role === 'OBSERVER' ? (
         <ObserverProfileComponent loggingOut={loggingOut} onLogout={logout} />

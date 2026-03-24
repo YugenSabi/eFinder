@@ -29,7 +29,7 @@ function RadarChart({ points }: { points: StatPoint[] }) {
     .join(' ');
 
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} width="100%" height="100%" aria-label="РЎС‚Р°С‚РёСЃС‚РёРєР° РЅР°РїСЂР°РІР»РµРЅРёР№">
+    <svg viewBox={`0 0 ${size} ${size}`} width="100%" height="100%" aria-label="Статистика направлений">
       {Array.from({ length: levels }, (_, index) => {
         const scale = (index + 1) / levels;
         return (
@@ -86,7 +86,7 @@ export function ProfileStatsSection({ stats }: { stats: StatPoint[] }) {
     <Box direction="column" gap={12} style={{ flex: '1 1 420px', minWidth: 360 }}>
       <Box justifyContent="center" alignItems="center">
         <Text font="headerNav" fontSize={32}>
-            Статистика направлений
+          Статистика направлений
         </Text>
       </Box>
       <Box
