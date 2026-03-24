@@ -8,7 +8,6 @@ datasource db {
 
 enum UserRole {
   ADMIN
-  MODERATOR
   ORGANIZER
   PARTICIPANT
   OBSERVER
@@ -53,6 +52,8 @@ model User {
   reviewsReceived    OrganizerReview[]    @relation("OrganizerReviewTarget")
   reviewsWritten     OrganizerReview[]    @relation("OrganizerReviewAuthor")
   ratingSnapshots    RatingSnapshot[]
+  observerFavorites  ObserverFavorite[]   @relation("ObserverFavorites")
+  favoritedBy        ObserverFavorite[]   @relation("ObservedParticipants")
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 }
@@ -95,6 +96,17 @@ model Event {
   participations   Participation[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+}
+
+model EventScoreWeight {
+  id         String          @id @default(cuid())
+  direction  EventDirection
+  difficulty EventDifficulty
+  weight     Float           @default(1)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@unique([direction, difficulty])
 }
 
 model EventReward {
@@ -143,4 +155,15 @@ model RatingSnapshot {
   eventsCount    Int            @default(0)
   createdAt      DateTime       @default(now())
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ObserverFavorite {
+  id            String   @id @default(cuid())
+  observerId    String
+  participantId String
+  createdAt     DateTime @default(now())
+  observer      User     @relation("ObserverFavorites", fields: [observerId], references: [id], onDelete: Cascade)
+  participant   User     @relation("ObservedParticipants", fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([observerId, participantId])
 }

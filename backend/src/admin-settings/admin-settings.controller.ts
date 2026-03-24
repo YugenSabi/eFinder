@@ -1,45 +1,36 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
-  Patch,
-  Param,
-  Delete,
+  Put,
+  Req,
 } from '@nestjs/common';
+import {ApiTags} from '@nestjs/swagger';
+import type {Request} from 'express';
+import {AuthService} from '../auth/auth.service';
 import { AdminSettingsService } from './admin-settings.service';
 import { CreateAdminSettingDto } from './dto/create-admin-setting.dto';
-import { UpdateAdminSettingDto } from './dto/update-admin-setting.dto';
 
+@ApiTags('admin-settings')
 @Controller('admin-settings')
 export class AdminSettingsController {
-  constructor(private readonly adminSettingsService: AdminSettingsService) {}
-
-  @Post()
-  create(@Body() createAdminSettingDto: CreateAdminSettingDto) {
-    return this.adminSettingsService.create(createAdminSettingDto);
-  }
+  constructor(
+    private readonly adminSettingsService: AdminSettingsService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
   findAll() {
     return this.adminSettingsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminSettingsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateAdminSettingDto: UpdateAdminSettingDto,
+  @Put()
+  async replace(
+    @Req() request: Request,
+    @Body() createAdminSettingDto: CreateAdminSettingDto,
   ) {
-    return this.adminSettingsService.update(+id, updateAdminSettingDto);
-  }
+    const currentUser = await this.authService.getAuthenticatedUser(request);
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminSettingsService.remove(+id);
+    return this.adminSettingsService.replace(currentUser, createAdminSettingDto);
   }
 }

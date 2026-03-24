@@ -1,4 +1,4 @@
-import type { AuthUser } from '../../../lib/auth/context';
+import type { AuthUser } from '../../../../lib/auth/context';
 
 export type RatingRow = {
   place: number;
@@ -53,7 +53,7 @@ export function buildMockProfile(
     ],
     reserveScore: 104,
     rating: [
-      { place: 6, name: 'Василий Беляев', score: 865},
+      { place: 6, name: 'Василий Беляев', score: 865 },
       { place: 7, name: fullName, score: 834 },
       { place: 8, name: 'Егор Лебедев', score: 803 },
     ],

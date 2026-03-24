@@ -9,16 +9,26 @@ import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import { useAuth } from '../../../lib/auth/context';
 import { logoutCurrentUser } from '../../../lib/kratos';
-import { ProfileAchievementsSection } from './achievements-section';
-import { buildMockProfile } from './model';
-import { ProfileOverviewSection } from './overview-section';
-import { ProfileStatsSection } from './stats-section';
+import { AdminProfileComponent } from './admin/component';
+import { ObserverProfileComponent } from './observer/component';
+import { OrganizerProfileComponent } from './organizer/component';
+import { UserProfileComponent } from './user/component';
 
 export function ProfileComponent() {
   const t = useTranslations('Auth.profile');
   const router = useRouter();
-  const { currentUser, setCurrentUser } = useAuth();
+  const { currentUser, setCurrentUser, isAuthResolved } = useAuth();
   const [loggingOut, setLoggingOut] = useState(false);
+
+  if (!isAuthResolved) {
+    return (
+      <MainLayoutComponent>
+        <Box as="main" width="$full" justifyContent="center" alignItems="center" paddingTop={48} paddingBottom={48}>
+          <Text as="span">{t('title')}</Text>
+        </Box>
+      </MainLayoutComponent>
+    );
+  }
 
   if (!currentUser) {
     return (
@@ -40,6 +50,16 @@ export function ProfileComponent() {
     );
   }
 
+  const logout = async () => {
+    try {
+      setLoggingOut(true);
+      setCurrentUser(null);
+      await logoutCurrentUser();
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
   if (!currentUser.isVerified) {
     return (
       <MainLayoutComponent>
@@ -59,15 +79,7 @@ export function ProfileComponent() {
               label={loggingOut ? t('logoutLoading') : t('logout')}
               variant="secondary"
               font="headerNav"
-              onClick={async () => {
-                try {
-                  setLoggingOut(true);
-                  setCurrentUser(null);
-                  await logoutCurrentUser();
-                } finally {
-                  setLoggingOut(false);
-                }
-              }}
+              onClick={logout}
             />
           </Box>
         </Box>
@@ -75,35 +87,26 @@ export function ProfileComponent() {
     );
   }
 
-  const profile = buildMockProfile(currentUser);
-
   return (
     <MainLayoutComponent>
-      <Box as="main" direction="column" width="$full" gap={28} paddingTop={34} paddingBottom={40}>
-        <ProfileOverviewSection profile={profile} />
-
-        <Box gap={18} alignItems="stretch" style={{ flexWrap: 'wrap' }}>
-          <ProfileAchievementsSection achievements={profile.achievements} />
-          <ProfileStatsSection stats={profile.stats} />
-        </Box>
-
-        <Box justifyContent="flex-end">
-          <Button
-            label={loggingOut ? t('logoutLoading') : t('logout')}
-            variant="secondary"
-            font="headerNav"
-            onClick={async () => {
-              try {
-                setLoggingOut(true);
-                setCurrentUser(null);
-                await logoutCurrentUser();
-              } finally {
-                setLoggingOut(false);
-              }
-            }}
-          />
-        </Box>
-      </Box>
+      {currentUser.role === 'ADMIN' ? (
+        <AdminProfileComponent loggingOut={loggingOut} onLogout={logout} />
+      ) : null}
+      {currentUser.role === 'ORGANIZER' ? (
+        <OrganizerProfileComponent loggingOut={loggingOut} onLogout={logout} />
+      ) : null}
+      {currentUser.role === 'OBSERVER' ? (
+        <ObserverProfileComponent loggingOut={loggingOut} onLogout={logout} />
+      ) : null}
+      {(!currentUser.role || currentUser.role === 'PARTICIPANT') ? (
+        <UserProfileComponent
+          currentUser={currentUser}
+          logoutLabel={t('logout')}
+          logoutLoadingLabel={t('logoutLoading')}
+          loggingOut={loggingOut}
+          onLogout={logout}
+        />
+      ) : null}
     </MainLayoutComponent>
   );
 }

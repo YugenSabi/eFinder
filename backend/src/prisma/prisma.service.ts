@@ -15,13 +15,10 @@ export class PrismaService
     }
 
     const url = new URL(connectionString);
-    const schema = url.searchParams.get('schema') ?? undefined;
+    const schema = url.searchParams.get('schema') ?? 'public';
 
     super({
-      adapter: new PrismaPg(
-        {connectionString},
-        {schema},
-      ),
+      adapter: new PrismaPg({ connectionString }, { schema }),
     });
   }
 

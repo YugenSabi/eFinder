@@ -1,26 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { CreateOrganizerDto } from './dto/create-organizer.dto';
+import {ForbiddenException, Injectable} from '@nestjs/common';
+import {type User, UserRole} from '@prisma/client';
+import {UsersService} from '../users/users.service';
 import { UpdateOrganizerDto } from './dto/update-organizer.dto';
 
 @Injectable()
 export class OrganizersService {
-  create(createOrganizerDto: CreateOrganizerDto) {
-    return { action: 'create', payload: createOrganizerDto };
+  constructor(private readonly usersService: UsersService) {}
+
+  findAll(currentUser: User) {
+    this.assertCanModerate(currentUser);
+
+    return this.usersService.listOrganizerCandidates();
   }
 
-  findAll() {
-    return { items: [] };
+  findApproved(currentUser: User) {
+    this.assertCanModerate(currentUser);
+
+    return this.usersService.listApprovedOrganizers();
   }
 
-  findOne(id: number) {
-    return { id };
+  update(currentUser: User, userId: string, updateOrganizerDto: UpdateOrganizerDto) {
+    this.assertCanModerate(currentUser);
+
+    return this.usersService.updateUserRole(userId, updateOrganizerDto.role);
   }
 
-  update(id: number, updateOrganizerDto: UpdateOrganizerDto) {
-    return { action: 'update', id, payload: updateOrganizerDto };
-  }
-
-  remove(id: number) {
-    return { action: 'remove', id };
+  private assertCanModerate(currentUser: User) {
+    if (currentUser.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('Only admin can moderate organizers');
+    }
   }
 }

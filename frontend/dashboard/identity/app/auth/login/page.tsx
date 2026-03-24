@@ -1,8 +1,24 @@
 import type {ReactNode} from 'react';
+import {redirect} from 'next/navigation';
 import {Suspense} from 'react';
 import {LoginComponent} from '@identity/login';
+import {getBrowserFlowRedirectUrl} from '../../../lib/kratos/server';
 
-export default function LoginPage(): ReactNode {
+type LoginPageProps = {
+  searchParams: Promise<{
+    flow?: string;
+  }>;
+};
+
+export default async function LoginPage({
+  searchParams,
+}: LoginPageProps): Promise<ReactNode> {
+  const params = await searchParams;
+
+  if (!params.flow) {
+    redirect(getBrowserFlowRedirectUrl('login', '/auth/login'));
+  }
+
   return (
     <Suspense fallback={null}>
       <LoginComponent />

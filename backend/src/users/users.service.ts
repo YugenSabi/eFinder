@@ -3,14 +3,6 @@ import { UserRole } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { KratosWhoAmIResponse } from '../kratos/kratos.types';
 
-const KRATOS_ROLE_TO_USER_ROLE: Record<string, UserRole> = {
-  admin: UserRole.ADMIN,
-  moderator: UserRole.MODERATOR,
-  observer: UserRole.OBSERVER,
-  organizer: UserRole.ORGANIZER,
-  participant: UserRole.PARTICIPANT,
-};
-
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -22,7 +14,6 @@ export class UsersService {
       throw new Error('Kratos identity does not include email');
     }
 
-    const role = this.resolveRole(identity.traits?.role);
     const isVerified = this.resolveVerified(identity, email);
     const user = await this.prismaService.user.upsert({
       where: { kratosIdentityId: identity.id },
@@ -32,7 +23,6 @@ export class UsersService {
         firstName: identity.traits?.first_name ?? null,
         lastName: identity.traits?.last_name ?? null,
         city: identity.traits?.city ?? null,
-        role,
       },
       create: {
         kratosIdentityId: identity.id,
@@ -41,21 +31,11 @@ export class UsersService {
         firstName: identity.traits?.first_name ?? null,
         lastName: identity.traits?.last_name ?? null,
         city: identity.traits?.city ?? null,
-        role,
-        organizerProfile:
-          role === UserRole.ORGANIZER
-            ? {
-                create: {
-                  commonRewardTypes: [],
-                },
-              }
-            : undefined,
+        role: UserRole.PARTICIPANT,
         participantProfile:
-          role === UserRole.PARTICIPANT || role === UserRole.OBSERVER
-            ? {
-                create: {},
-              }
-            : undefined,
+          {
+            create: {},
+          },
       },
       include: {
         organizerProfile: true,
@@ -63,7 +43,7 @@ export class UsersService {
       },
     });
 
-    await this.ensureRoleProfiles(user.id, role);
+    await this.ensureRoleProfiles(user.id, user.role);
 
     return this.prismaService.user.findUniqueOrThrow({
       where: { id: user.id },
@@ -74,12 +54,75 @@ export class UsersService {
     });
   }
 
-  private resolveRole(role?: string): UserRole {
-    if (!role) {
-      return UserRole.PARTICIPANT;
-    }
+  findById(userId: string) {
+    return this.prismaService.user.findUniqueOrThrow({
+      where: { id: userId },
+      include: {
+        organizerProfile: true,
+        participantProfile: true,
+      },
+    });
+  }
 
-    return KRATOS_ROLE_TO_USER_ROLE[role] ?? UserRole.PARTICIPANT;
+  listAll() {
+    return this.prismaService.user.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        organizerProfile: true,
+        participantProfile: true,
+      },
+    });
+  }
+
+  listOrganizerCandidates() {
+    return this.prismaService.user.findMany({
+      where: {
+        isVerified: true,
+        role: {
+          in: [UserRole.PARTICIPANT, UserRole.OBSERVER],
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        organizerProfile: true,
+        participantProfile: true,
+      },
+    });
+  }
+
+  listApprovedOrganizers() {
+    return this.prismaService.user.findMany({
+      where: {
+        isVerified: true,
+        role: UserRole.ORGANIZER,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        organizerProfile: true,
+        participantProfile: true,
+      },
+    });
+  }
+
+  async updateUserRole(userId: string, role: UserRole) {
+    const user = await this.prismaService.user.update({
+      where: { id: userId },
+      data: { role },
+      include: {
+        organizerProfile: true,
+        participantProfile: true,
+      },
+    });
+
+    await this.ensureRoleProfiles(userId, role);
+
+    return this.findById(userId);
   }
 
   private resolveVerified(

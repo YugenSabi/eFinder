@@ -36,17 +36,12 @@
           "title": "Last name",
           "minLength": 1
         },
-        "role": {
-          "type": "string",
-          "title": "Role",
-          "enum": ["participant", "organizer", "observer", "moderator", "admin"]
-        },
         "city": {
           "type": "string",
           "title": "City"
         }
       },
-      "required": ["email", "first_name", "last_name", "role"],
+      "required": ["email", "first_name", "last_name"],
       "additionalProperties": false
     }
   }

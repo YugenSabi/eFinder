@@ -7,7 +7,6 @@ export type KratosWhoAmIResponse = {
       email?: string;
       first_name?: string;
       last_name?: string;
-      role?: string;
       city?: string;
     };
     verifiable_addresses?: Array<{

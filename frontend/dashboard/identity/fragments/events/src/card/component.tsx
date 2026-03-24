@@ -48,9 +48,7 @@ export function CardComponent({ event }: CardComponentProps) {
           {event.title}
         </Text>
 
-        <Text
-          font="footerText"
-          fontSize={11}
+        <Box
           style={{
             lineHeight: 1.35,
             display: '-webkit-box',
@@ -59,8 +57,10 @@ export function CardComponent({ event }: CardComponentProps) {
             overflow: 'hidden',
           }}
         >
-          {event.description}
-        </Text>
+          <Text font="footerText" fontSize={11}>
+            {event.description}
+          </Text>
+        </Box>
 
         <EventCardTags tags={event.tags} />
 
