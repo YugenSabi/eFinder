@@ -11,7 +11,7 @@ export function ProfileAchievementsSection({
     <Box direction="column" gap={12} style={{ flex: '1 1 520px', minWidth: 380 }}>
       <Box justifyContent="center" alignItems="center">
         <Text font="headerNav" fontSize={32}>
-            Портфолио достижений
+          Портфолио достижений
         </Text>
       </Box>
       <Box

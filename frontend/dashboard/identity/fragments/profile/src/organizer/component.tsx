@@ -1,31 +1,48 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { RoleProfileCard } from '../shared/role-profile-card';
+import { Button } from '@ui/button';
+import { Box } from '@ui/layout';
+import type { AuthUser } from '../../../../lib/auth/context';
+import { buildMockOrganizerProfile } from './model';
+import { OrganizerOverviewSection } from './overview-section';
+import { OrganizerRecentEventsSection } from './recent-events-section';
+import { OrganizerRewardsSection } from './rewards-section';
 
 type OrganizerProfileComponentProps = {
-  loggingOut: boolean;
-  onLogout: () => void | Promise<void>;
+  currentUser: NonNullable<AuthUser>;
 };
 
 export function OrganizerProfileComponent({
-  loggingOut,
-  onLogout,
+  currentUser,
 }: OrganizerProfileComponentProps) {
-  const t = useTranslations('Auth.profile');
   const router = useRouter();
+  const profile = buildMockOrganizerProfile(currentUser);
 
   return (
-    <RoleProfileCard
-      title={t('title')}
-      roleLabel={t('roles.ORGANIZER')}
-      actionLabel={t('actions.eventManagement')}
-      onAction={() => router.push('/profile/event-management')}
-      logoutLabel={t('logout')}
-      logoutLoadingLabel={t('logoutLoading')}
-      loggingOut={loggingOut}
-      onLogout={onLogout}
-    />
+    <Box as="main" direction="column" width="$full" gap={28} paddingTop={34} paddingBottom={40}>
+      <OrganizerOverviewSection profile={profile} />
+
+      <Box gap={18} alignItems="stretch" flexWrap="wrap">
+        <OrganizerRewardsSection rewards={profile.rewards} />
+        <OrganizerRecentEventsSection events={profile.recentEvents} />
+      </Box>
+
+      <Box justifyContent="flex-end" gap={12}>
+        <Button
+          label="Редактировать"
+          bg="contrastColor"
+          textColor="surface"
+          font="headerNav"
+          onClick={() => router.push('/profile/settings')}
+        />
+        <Button
+          label="Управление мероприятиями"
+          variant="secondary"
+          font="headerNav"
+          onClick={() => router.push('/profile/event-management')}
+        />
+      </Box>
+    </Box>
   );
 }

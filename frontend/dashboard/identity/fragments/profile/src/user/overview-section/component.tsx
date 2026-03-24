@@ -104,7 +104,7 @@ export function ProfileOverviewSection({
                   </Text>
                 </Box>
                 <Box flexGrow={1} justifyContent="center" alignItems="center">
-                  <Text font="headerNav" fontSize={16}>
+                  <Text font={item.highlight ? 'headerNav' : 'footerText'} fontSize={16}>
                     {item.name}
                   </Text>
                 </Box>

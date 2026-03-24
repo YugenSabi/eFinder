@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Button } from '@ui/button';
 import { Box } from '@ui/layout';
 import { buildMockProfile } from './model';
@@ -29,6 +30,7 @@ export function UserProfileComponent({
   loggingOut,
   onLogout,
 }: UserProfileComponentProps) {
+  const router = useRouter();
   const profile = buildMockProfile(currentUser);
 
   return (
@@ -40,7 +42,14 @@ export function UserProfileComponent({
         <ProfileStatsSection stats={profile.stats} />
       </Box>
 
-      <Box justifyContent="flex-end">
+      <Box justifyContent="flex-end" gap={12}>
+        <Button
+          label="Редактировать"
+          bg="contrastColor"
+          textColor="surface"
+          font="headerNav"
+          onClick={() => router.push('/profile/settings')}
+        />
         <Button
           label={loggingOut ? logoutLoadingLabel : logoutLabel}
           variant="secondary"
