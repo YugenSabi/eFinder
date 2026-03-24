@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Param,
+  Query,
 } from '@nestjs/common';
 import { ParticipantsService } from './participants.service';
 
@@ -10,8 +11,8 @@ export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
 
   @Get()
-  findAll() {
-    return this.participantsService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.participantsService.findAll(search);
   }
 
   @Get(':id')

@@ -34,6 +34,11 @@ enum EventDifficulty {
   STRATEGIC
 }
 
+enum EventStatus {
+  ACTIVE
+  COMPLETED
+}
+
 enum ParticipationStatus {
   REGISTERED
   CHECKED_IN
@@ -105,8 +110,10 @@ model Event {
   city             String?
   direction        EventDirection
   difficulty       EventDifficulty   @default(BASIC)
+  status           EventStatus       @default(ACTIVE)
   startsAt         DateTime
   endsAt           DateTime?
+  completedAt      DateTime?
   organizerId      String
   basePoints       Int               @default(0)
   difficultyFactor Float             @default(1)
@@ -131,12 +138,17 @@ model EventScoreWeight {
 }
 
 model EventReward {
-  id          String @id @default(cuid())
-  eventId     String
-  title       String
-  description String?
-  points      Int    @default(0)
-  event       Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  id             String @id @default(cuid())
+  eventId        String
+  place          Int    @default(1)
+  title          String
+  description    String?
+  additionalInfo String?
+  platformPoints Int    @default(0)
+  points         Int    @default(0)
+  event          Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, place])
 }
 
 model Participation {
@@ -144,6 +156,7 @@ model Participation {
   eventId          String
   participantId    String
   status           ParticipationStatus @default(REGISTERED)
+  place            Int?
   qrCodeToken      String?             @unique
   verifiedAt       DateTime?
   organizerComment String?

@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   Req,
 } from '@nestjs/common';
 import { UserRole, type User } from '@prisma/client';
@@ -21,11 +22,11 @@ export class UsersController {
   ) {}
 
   @Get()
-  async findAll(@Req() request: Request) {
+  async findAll(@Req() request: Request, @Query('search') search?: string) {
     const currentUser = await this.authService.getAuthenticatedUser(request);
     this.assertAdmin(currentUser);
 
-    return this.usersService.listAll();
+    return this.usersService.listAll(search);
   }
 
   @Patch(':id/role')

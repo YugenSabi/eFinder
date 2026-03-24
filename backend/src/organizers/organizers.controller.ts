@@ -5,6 +5,7 @@ import {
   Patch,
   Param,
   Post,
+  Query,
   Req,
 } from '@nestjs/common';
 import {ApiTags} from '@nestjs/swagger';
@@ -37,17 +38,17 @@ export class OrganizersController {
   }
 
   @Get('candidates')
-  async findAll(@Req() request: Request) {
+  async findAll(@Req() request: Request, @Query('search') search?: string) {
     const currentUser = await this.authService.getAuthenticatedUser(request);
 
-    return this.organizersService.findAll(currentUser);
+    return this.organizersService.findAll(currentUser, search);
   }
 
   @Get('approved')
-  async findApproved(@Req() request: Request) {
+  async findApproved(@Req() request: Request, @Query('search') search?: string) {
     const currentUser = await this.authService.getAuthenticatedUser(request);
 
-    return this.organizersService.findApproved(currentUser);
+    return this.organizersService.findApproved(currentUser, search);
   }
 
   @Get(':id/profile')

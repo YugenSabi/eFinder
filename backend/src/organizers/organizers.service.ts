@@ -23,16 +23,16 @@ export class OrganizersService {
     );
   }
 
-  findAll(currentUser: User) {
+  findAll(currentUser: User, search?: string) {
     this.assertCanModerate(currentUser);
 
-    return this.usersService.listOrganizerCandidates();
+    return this.usersService.listOrganizerCandidates(search);
   }
 
-  findApproved(currentUser: User) {
+  findApproved(currentUser: User, search?: string) {
     this.assertCanModerate(currentUser);
 
-    return this.usersService.listApprovedOrganizers();
+    return this.usersService.listApprovedOrganizers(search);
   }
 
   findPublicProfile(userId: string) {

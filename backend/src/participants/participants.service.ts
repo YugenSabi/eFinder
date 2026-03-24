@@ -6,12 +6,42 @@ import { PrismaService } from '../prisma/prisma.service';
 export class ParticipantsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  findAll() {
+  findAll(search?: string) {
     return this.prismaService.user.findMany({
       where: {
         role: {
           in: [UserRole.PARTICIPANT, UserRole.ADMIN, UserRole.OBSERVER],
         },
+        ...(search
+          ? {
+              OR: [
+                {
+                  firstName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  lastName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  city: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }
+          : {}),
       },
       include: {
         participantProfile: true,

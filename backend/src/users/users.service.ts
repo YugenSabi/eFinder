@@ -80,20 +80,21 @@ export class UsersService {
         participantProfile: true,
         createdEvents: true,
         participations: {
-          where: {
-            status: ParticipationStatus.VERIFIED,
-          },
           include: {
             event: true,
           },
           orderBy: {
-            verifiedAt: 'desc',
+            createdAt: 'desc',
           },
         },
       },
     });
 
-    const achievements = [...user.participations]
+    const verifiedParticipations = user.participations.filter(
+      (participation) => participation.status === ParticipationStatus.VERIFIED,
+    );
+
+    const achievements = [...verifiedParticipations]
       .sort((left, right) => right.scoreAwarded - left.scoreAwarded)
       .slice(0, 5)
       .map((participation, index) => ({
@@ -107,7 +108,7 @@ export class UsersService {
       directionScores.set(direction, 0);
     }
 
-    for (const participation of user.participations) {
+    for (const participation of verifiedParticipations) {
       const currentScore = directionScores.get(participation.event.direction) ?? 0;
       directionScores.set(
         participation.event.direction,
@@ -227,6 +228,27 @@ export class UsersService {
           user.participantProfile?.reserveForecastScore ?? 0,
         portfolioSummary: user.participantProfile?.portfolioSummary ?? null,
       },
+      participationHistory: user.participations.map((participation) => ({
+        id: participation.id,
+        status: participation.status,
+        isConfirmed: participation.status === ParticipationStatus.VERIFIED,
+        scoreAwarded: participation.scoreAwarded,
+        organizerComment: participation.organizerComment,
+        verifiedAt: participation.verifiedAt,
+        createdAt: participation.createdAt,
+        updatedAt: participation.updatedAt,
+        event: {
+          id: participation.event.id,
+          title: participation.event.title,
+          description: participation.event.description,
+          city: participation.event.city,
+          direction: participation.event.direction,
+          difficulty: participation.event.difficulty,
+          startsAt: participation.event.startsAt,
+          endsAt: participation.event.endsAt,
+          imageUrl: participation.event.imageUrl,
+        },
+      })),
       achievements,
       stats,
       rating,
@@ -287,8 +309,46 @@ export class UsersService {
     });
   }
 
-  listAll() {
+  listAll(search?: string) {
     return this.prismaService.user.findMany({
+      where: search
+        ? {
+            OR: [
+              {
+                firstName: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                lastName: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                email: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                city: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                organizerProfile: {
+                  organizationName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              },
+            ],
+          }
+        : undefined,
       orderBy: {
         createdAt: 'desc',
       },
@@ -300,7 +360,7 @@ export class UsersService {
     });
   }
 
-  listOrganizerCandidates() {
+  listOrganizerCandidates(search?: string) {
     return this.prismaService.user.findMany({
       where: {
         organizerProfile: {
@@ -308,6 +368,38 @@ export class UsersService {
             status: OrganizerProfileStatus.PENDING,
           },
         },
+        ...(search
+          ? {
+              OR: [
+                {
+                  firstName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  lastName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  organizerProfile: {
+                    organizationName: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              ],
+            }
+          : {}),
       },
       orderBy: {
         createdAt: 'desc',
@@ -320,7 +412,7 @@ export class UsersService {
     });
   }
 
-  listApprovedOrganizers() {
+  listApprovedOrganizers(search?: string) {
     return this.prismaService.user.findMany({
       where: {
         organizerProfile: {
@@ -328,6 +420,38 @@ export class UsersService {
             status: OrganizerProfileStatus.APPROVED,
           },
         },
+        ...(search
+          ? {
+              OR: [
+                {
+                  firstName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  lastName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  organizerProfile: {
+                    organizationName: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              ],
+            }
+          : {}),
       },
       orderBy: {
         createdAt: 'desc',

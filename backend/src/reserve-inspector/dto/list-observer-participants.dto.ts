@@ -10,6 +10,10 @@ import {
 export class ListObserverParticipantsDto {
   @IsOptional()
   @IsString()
+  search?: string;
+
+  @IsOptional()
+  @IsString()
   city?: string;
 
   @IsOptional()

@@ -1,7 +1,4 @@
-import {
-  EventDifficulty,
-  EventDirection,
-} from '@prisma/client';
+import { EventDifficulty, EventDirection } from '@prisma/client';
 import {
   IsArray,
   IsDateString,
@@ -10,6 +7,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
   Min,
   ValidateNested,
@@ -17,6 +15,11 @@ import {
 import {Type} from 'class-transformer';
 
 export class CreateEventRewardDto {
+  @IsInt()
+  @Min(1)
+  @Max(3)
+  place!: number;
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(120)
@@ -26,6 +29,16 @@ export class CreateEventRewardDto {
   @IsString()
   @MaxLength(500)
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  additionalInfo?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  platformPoints?: number;
 
   @IsInt()
   @Min(0)

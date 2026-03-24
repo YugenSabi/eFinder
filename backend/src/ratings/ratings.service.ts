@@ -1,26 +1,80 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRatingDto } from './dto/create-rating.dto';
-import { UpdateRatingDto } from './dto/update-rating.dto';
+import { UserRole } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class RatingsService {
-  create(createRatingDto: CreateRatingDto) {
-    return { action: 'create', payload: createRatingDto };
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
-  findAll() {
-    return { items: [] };
-  }
+  async findAll(limit = 100, search?: string) {
+    const normalizedLimit = Number.isFinite(limit) && limit > 0 ? limit : 100;
 
-  findOne(id: number) {
-    return { id };
-  }
+    const users = await this.prismaService.user.findMany({
+      where: {
+        role: {
+          in: [UserRole.ADMIN, UserRole.OBSERVER, UserRole.PARTICIPANT],
+        },
+        participantProfile: {
+          isNot: null,
+        },
+        ...(search
+          ? {
+              OR: [
+                {
+                  firstName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  lastName: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  city: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  school: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }
+          : {}),
+      },
+      include: {
+        participantProfile: true,
+      },
+    });
 
-  update(id: number, updateRatingDto: UpdateRatingDto) {
-    return { action: 'update', id, payload: updateRatingDto };
-  }
-
-  remove(id: number) {
-    return { action: 'remove', id };
+    return users
+      .sort(
+        (left, right) =>
+          (right.participantProfile?.totalScore ?? 0) -
+          (left.participantProfile?.totalScore ?? 0),
+      )
+      .slice(0, normalizedLimit)
+      .map((user, index) => ({
+      place: index + 1,
+      userId: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      city: user.city,
+      totalScore: user.participantProfile?.totalScore ?? 0,
+      reserveForecastScore: user.participantProfile?.reserveForecastScore ?? 0,
+      }));
   }
 }

@@ -26,6 +26,48 @@ export class ReserveInspectorService {
       where: {
         role: UserRole.PARTICIPANT,
         isVerified: true,
+        ...(query.search
+          ? {
+              OR: [
+                {
+                  firstName: {
+                    contains: query.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  lastName: {
+                    contains: query.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  email: {
+                    contains: query.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  city: {
+                    contains: query.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  school: {
+                    contains: query.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  headline: {
+                    contains: query.search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }
+          : {}),
       },
       orderBy: {
         createdAt: 'desc',
