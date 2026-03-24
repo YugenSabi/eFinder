@@ -4,8 +4,11 @@ const withNextIntl = createNextIntlPlugin('./entrypoint/src/i18n/request.ts');
 
 const nextConfig = {
   transpilePackages: [
+  "@identity/activity",
   "@identity/main-layout",
   "@identity/registration",
+  "@identity/login",
+  "@identity/events",
   "@identity/home",
   "@ui/theme",
   "@ui/layout",

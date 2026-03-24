@@ -28,9 +28,13 @@
         "label": "Почта",
         "placeholder": "example@gmail.com"
       },
-      "name": {
+      "firstName": {
         "label": "Имя",
-        "placeholder": "Ваше имя"
+        "placeholder": "Александр"
+      },
+      "lastName": {
+        "label": "Фамилия",
+        "placeholder": "Несатый"
       },
       "password": {
         "label": "Пароль",

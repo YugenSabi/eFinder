@@ -99,19 +99,18 @@ export async function submitRegistrationFlow(params: {
   flowId: string;
   csrfToken?: string;
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   password: string;
 }) {
-  const {firstName, lastName} = splitName(params.name);
-
   return submitBrowserFlow('registration', params.flowId, {
     method: 'password',
     csrf_token: params.csrfToken,
     password: params.password,
     traits: {
       email: params.email,
-      first_name: firstName,
-      last_name: lastName,
+      first_name: params.firstName,
+      last_name: params.lastName,
       role: 'participant',
     },
   });
@@ -298,13 +297,3 @@ function resolveKratosError(payload: unknown) {
   return null;
 }
 
-function splitName(name: string) {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  const firstName = parts[0] ?? '';
-  const lastName = parts.slice(1).join(' ') || firstName;
-
-  return {
-    firstName,
-    lastName,
-  };
-}

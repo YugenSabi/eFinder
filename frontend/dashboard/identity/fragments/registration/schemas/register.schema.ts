@@ -7,7 +7,8 @@ export const RegisterSchema = z
       .trim()
       .min(1, 'Введите email')
       .email('Введите корректный email'),
-    name: z.string().trim().min(1, 'Введите имя'),
+    firstName: z.string().trim().min(1, 'Введите имя'),
+    lastName: z.string().trim().min(1, 'Введите фамилию'),
     password: z
       .string()
       .min(1, 'Введите пароль')

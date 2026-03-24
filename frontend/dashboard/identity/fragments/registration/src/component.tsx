@@ -9,27 +9,28 @@ import {
   submitRegistrationFlow,
   syncCurrentUser,
 } from '../../../lib/kratos';
+import { useAuth } from '../../../lib/auth/context';
 import { MainLayoutComponent } from '@identity/main-layout';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import {useRouter, useSearchParams} from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
-import {useAuth} from '../../../lib/auth/context';
 import { RegisterSchema, type TypeRegisterSchema } from '../schemas';
+import { CtaComponent } from './cta';
 import { EmailInputComponent } from './email-input';
-import { NameInputComponent } from './name-input';
+import { FirstNameInputComponent } from './first-name-input';
+import { LastNameInputComponent } from './last-name-input';
 import { PasswordInputComponent } from './password-input';
 import { RepeatPasswordInputComponent } from './repeat-password-input';
 import { SubmitButtonComponent } from './submit-button';
-import { CtaComponent } from './cta';
 import { TitleComponent } from './title/component';
 
 export function RegistrationComponent() {
   const t = useTranslations('Auth.registration');
   const router = useRouter();
-  const {setCurrentUser} = useAuth();
+  const { setCurrentUser } = useAuth();
   const searchParams = useSearchParams();
   const [flowId, setFlowId] = useState<string | null>(null);
   const [csrfToken, setCsrfToken] = useState<string | undefined>();
@@ -40,7 +41,8 @@ export function RegistrationComponent() {
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: '',
-      name: '',
+      firstName: '',
+      lastName: '',
       password: '',
       repeatPassword: '',
     },
@@ -92,7 +94,8 @@ export function RegistrationComponent() {
         flowId,
         csrfToken,
         email: data.email,
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         password: data.password,
       });
       const currentUser = await syncCurrentUser();
@@ -108,7 +111,14 @@ export function RegistrationComponent() {
 
   return (
     <MainLayoutComponent>
-      <Box as="main" width="$full" justifyContent="center" alignItems="center"  paddingTop={48} paddingBottom={48}>
+      <Box
+        as="main"
+        width="$full"
+        justifyContent="center"
+        alignItems="center"
+        paddingTop={48}
+        paddingBottom={48}
+      >
         <Box
           as="form"
           direction="column"
@@ -121,7 +131,8 @@ export function RegistrationComponent() {
         >
           <TitleComponent />
           <EmailInputComponent register={form.register} errors={form.formState.errors} />
-          <NameInputComponent register={form.register} errors={form.formState.errors} />
+          <FirstNameInputComponent register={form.register} errors={form.formState.errors} />
+          <LastNameInputComponent register={form.register} errors={form.formState.errors} />
           <PasswordInputComponent register={form.register} errors={form.formState.errors} />
           <RepeatPasswordInputComponent
             register={form.register}

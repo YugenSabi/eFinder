@@ -184,6 +184,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dashboard/identity@workspace:dashboard/identity"
   dependencies:
+    "@identity/activity": "npm:*"
+    "@identity/events": "npm:*"
     "@identity/home": "npm:*"
     "@identity/login": "npm:*"
     "@identity/registration": "npm:*"
@@ -423,6 +425,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@identity/activity@npm:*, @identity/activity@workspace:dashboard/identity/fragments/activity":
+  version: 0.0.0-use.local
+  resolution: "@identity/activity@workspace:dashboard/identity/fragments/activity"
+  dependencies:
+    "@identity/main-layout": "npm:*"
+    "@ui/icons": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next: "npm:^16.2.1"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@identity/confirm@workspace:dashboard/identity/fragments/confirm":
+  version: 0.0.0-use.local
+  resolution: "@identity/confirm@workspace:dashboard/identity/fragments/confirm"
+  dependencies:
+    "@identity/main-layout": "npm:*"
+    "@ui/button": "npm:*"
+    "@ui/input": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next-intl: "npm:*"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@identity/events@npm:*, @identity/events@workspace:dashboard/identity/fragments/events":
+  version: 0.0.0-use.local
+  resolution: "@identity/events@workspace:dashboard/identity/fragments/events"
+  dependencies:
+    "@ui/button": "npm:*"
+    "@ui/input": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next: "npm:^16.2.1"
+    next-intl: "npm:^4.0.0"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+    react-hook-form: "npm:^7.54.2"
+    zod: "npm:^3.24.2"
+  languageName: unknown
+  linkType: soft
+
 "@identity/home@npm:*, @identity/home@workspace:dashboard/identity/fragments/home":
   version: 0.0.0-use.local
   resolution: "@identity/home@workspace:dashboard/identity/fragments/home"
@@ -469,6 +517,20 @@ __metadata:
     "@ui/text": "npm:*"
     "@ui/theme": "npm:*"
     next: "npm:^16.2.1"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@identity/profile@workspace:dashboard/identity/fragments/profile":
+  version: 0.0.0-use.local
+  resolution: "@identity/profile@workspace:dashboard/identity/fragments/profile"
+  dependencies:
+    "@identity/main-layout": "npm:*"
+    "@ui/button": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next-intl: "npm:*"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
   languageName: unknown

@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react';
-import {MainLayoutComponent} from '@identity/main-layout';
+import {EventsComponent} from "@identity/events";
 
 export default function EventsPage(): ReactNode {
-  return <MainLayoutComponent />;
+  return <EventsComponent />;
 }
