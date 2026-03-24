@@ -14,8 +14,14 @@ export class PrismaService
       throw new Error('DATABASE_URL is not set');
     }
 
+    const url = new URL(connectionString);
+    const schema = url.searchParams.get('schema') ?? undefined;
+
     super({
-      adapter: new PrismaPg({ connectionString }),
+      adapter: new PrismaPg(
+        {connectionString},
+        {schema},
+      ),
     });
   }
 

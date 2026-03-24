@@ -1,6 +1,6 @@
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import type { StatPoint } from './model';
+import type { StatPoint } from '../model';
 
 function RadarChart({ points }: { points: StatPoint[] }) {
   const size = 300;
@@ -29,7 +29,7 @@ function RadarChart({ points }: { points: StatPoint[] }) {
     .join(' ');
 
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} width="100%" height="100%" aria-label="Статистика направлений">
+    <svg viewBox={`0 0 ${size} ${size}`} width="100%" height="100%" aria-label="РЎС‚Р°С‚РёСЃС‚РёРєР° РЅР°РїСЂР°РІР»РµРЅРёР№">
       {Array.from({ length: levels }, (_, index) => {
         const scale = (index + 1) / levels;
         return (
@@ -85,8 +85,8 @@ export function ProfileStatsSection({ stats }: { stats: StatPoint[] }) {
   return (
     <Box direction="column" gap={12} style={{ flex: '1 1 420px', minWidth: 360 }}>
       <Box justifyContent="center" alignItems="center">
-        <Text as="h2" font="headerNav" fontSize={32}>
-          Статистика направлений
+        <Text font="headerNav" fontSize={32}>
+            Статистика направлений
         </Text>
       </Box>
       <Box

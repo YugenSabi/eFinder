@@ -9,6 +9,7 @@
     "@ui/input": "*",
     "@ui/layout": "*",
     "@ui/text": "*",
+    "next": "*",
     "next-intl": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

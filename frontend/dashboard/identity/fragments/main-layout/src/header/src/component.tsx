@@ -1,6 +1,6 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import {Button} from '@ui/button';
 import {BellIcon, UserIcon} from '@ui/icons';
 import {Box} from '@ui/layout';
@@ -11,7 +11,10 @@ import {HEADER_HEIGHT_PX} from './constants';
 export function MainHeader() {
   const t = useTranslations('MainLayout.header');
   const router = useRouter();
+  const pathname = usePathname();
   const {currentUser} = useAuth();
+
+  const isActive = (href: string) => pathname === href;
 
   return (
     <Box
@@ -55,33 +58,39 @@ export function MainHeader() {
         alignItems="center"
         gap={12}
       >
-        <Button
-          label={t('events')}
-          variant="ghost"
-          textColor="surface"
-          font="headerNav"
-          fontSize={16}
-          size="sm"
-          onClick={() => router.push('/events')}
-        />
-        <Button
-          label={t('activity')}
-          variant="ghost"
-          textColor="surface"
-          font="headerNav"
-          fontSize={16}
-          size="sm"
-          onClick={() => router.push('/activity')}
-        />
-        <Button
-          label={t('rating')}
-          variant="ghost"
-          textColor="surface"
-          font="headerNav"
-          fontSize={16}
-          size="sm"
-          onClick={() => router.push('/rating')}
-        />
+        <Box borderBottom={isActive('/events') ? '2px solid #FFFFFF' : '2px solid transparent'}>
+          <Button
+            label={t('events')}
+            variant="ghost"
+            textColor="surface"
+            font="headerNav"
+            fontSize={16}
+            size="sm"
+            onClick={() => router.push('/events')}
+          />
+        </Box>
+        <Box borderBottom={isActive('/activity') ? '2px solid #FFFFFF' : '2px solid transparent'}>
+          <Button
+            label={t('activity')}
+            variant="ghost"
+            textColor="surface"
+            font="headerNav"
+            fontSize={16}
+            size="sm"
+            onClick={() => router.push('/activity')}
+          />
+        </Box>
+        <Box borderBottom={isActive('/rating') ? '2px solid #FFFFFF' : '2px solid transparent'}>
+          <Button
+            label={t('rating')}
+            variant="ghost"
+            textColor="surface"
+            font="headerNav"
+            fontSize={16}
+            size="sm"
+            onClick={() => router.push('/rating')}
+          />
+        </Box>
       </Box>
       <Box position="relative" zIndex={1} gap={12} alignItems="center">
         <BellIcon />

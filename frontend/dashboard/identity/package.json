@@ -15,6 +15,7 @@
     "@identity/events": "*",
     "@identity/home": "*",
     "@identity/login": "*",
+    "@identity/rating": "*",
     "@identity/registration": "*",
     "@ui/button": "*",
     "@ui/icons": "*",

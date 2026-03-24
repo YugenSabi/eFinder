@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import type { ActivityEvent } from '../model';
-import { ActivityEventCard } from './activity-event-card';
+import { ActivityEventCard } from '../activity-event-card';
 
 const PAGE_SIZE = 4;
 
@@ -19,10 +19,10 @@ export function RecentEventsCarousel({ events }: { events: ActivityEvent[] }) {
   return (
     <Box width="$full" alignItems="center" gap={10}>
       <Box
-        width={22}
-        height={22}
+        width={40}
+        height={40}
         border="1.5px solid #0C0310"
-        borderRadius={999}
+        borderRadius={20}
         justifyContent="center"
         alignItems="center"
         cursor={startIndex === 0 ? 'default' : 'pointer'}
@@ -32,7 +32,7 @@ export function RecentEventsCarousel({ events }: { events: ActivityEvent[] }) {
           if (startIndex > 0) setStartIndex((value) => value - 1);
         }}
       >
-        <Text font="headerNav" fontSize={12}>
+        <Text font="headerNav" fontSize={15}>
           {'<'}
         </Text>
       </Box>
@@ -57,10 +57,10 @@ export function RecentEventsCarousel({ events }: { events: ActivityEvent[] }) {
       </Box>
 
       <Box
-        width={22}
-        height={22}
+        width={40}
+        height={40}
         border="1.5px solid #0C0310"
-        borderRadius={999}
+        borderRadius={20}
         justifyContent="center"
         alignItems="center"
         cursor={startIndex >= maxIndex ? 'default' : 'pointer'}

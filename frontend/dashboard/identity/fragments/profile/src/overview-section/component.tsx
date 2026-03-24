@@ -1,6 +1,6 @@
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import type { ProfileViewModel } from './model';
+import type { ProfileViewModel } from '../model';
 
 export function ProfileOverviewSection({
   profile,
@@ -37,20 +37,20 @@ export function ProfileOverviewSection({
       >
         <Box gap={22} justifyContent="space-between" alignItems="stretch" style={{ flexWrap: 'wrap' }}>
           <Box direction="column" gap={10} style={{ flex: '1 1 340px' }}>
-            <Text  font="headerNav" fontSize={20}>
+            <Text font="headerNav" fontSize={20}>
               {profile.fullName}
             </Text>
-            <Text  font="footerText" fontSize={15}>
+            <Text font="footerText" fontSize={15}>
               {profile.roleLine}
             </Text>
             <Box gap={24} style={{ flexWrap: 'wrap' }}>
               <Box direction="column" gap={8} style={{ flex: '1 1 200px' }}>
                 <Text font="headerNav" fontSize={15}>
-                  Личная информация
+                  Личная информация:
                 </Text>
                 {profile.personalInfo.map((item) => (
                   <Text key={item} font="footerText" fontSize={15}>
-                    • {item}
+                    - {item}
                   </Text>
                 ))}
               </Box>
@@ -60,7 +60,7 @@ export function ProfileOverviewSection({
                 </Text>
                 {profile.links.map((item) => (
                   <Text key={item} font="footerText" fontSize={15}>
-                    • {item}
+                    - {item}
                   </Text>
                 ))}
               </Box>
@@ -74,9 +74,9 @@ export function ProfileOverviewSection({
             gap={10}
             padding={14}
             borderRadius={24}
-            style={{ flex: '1 1 360px', minWidth: 320}}
+            style={{ flex: '1 1 360px', minWidth: 320 }}
           >
-            <Text font="headerNav" fontSize={20} >
+            <Text font="headerNav" fontSize={20}>
               Текущий рейтинг в общем зачете
             </Text>
             {profile.rating.map((item) => (
@@ -89,7 +89,7 @@ export function ProfileOverviewSection({
                 backgroundColor={item.highlight ? 'background' : 'cardBg'}
                 border={item.highlight ? '1px solid rgba(68, 126, 173, 0.45)' : undefined}
                 gap={12}
-                style={{boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)'}}
+                style={{ boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }}
               >
                 <Box
                   width={36}

@@ -188,6 +188,7 @@ __metadata:
     "@identity/events": "npm:*"
     "@identity/home": "npm:*"
     "@identity/login": "npm:*"
+    "@identity/rating": "npm:*"
     "@identity/registration": "npm:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^19.0.0"
@@ -448,6 +449,7 @@ __metadata:
     "@ui/input": "npm:*"
     "@ui/layout": "npm:*"
     "@ui/text": "npm:*"
+    next: "npm:*"
     next-intl: "npm:*"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
@@ -530,7 +532,22 @@ __metadata:
     "@ui/button": "npm:*"
     "@ui/layout": "npm:*"
     "@ui/text": "npm:*"
+    next: "npm:*"
     next-intl: "npm:*"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@identity/rating@npm:*, @identity/rating@workspace:dashboard/identity/fragments/rating":
+  version: 0.0.0-use.local
+  resolution: "@identity/rating@workspace:dashboard/identity/fragments/rating"
+  dependencies:
+    "@identity/main-layout": "npm:*"
+    "@ui/icons": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next: "npm:^16.2.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
   languageName: unknown
@@ -3802,7 +3819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^16.2.1":
+"next@npm:*, next@npm:^16.2.1":
   version: 16.2.1
   resolution: "next@npm:16.2.1"
   dependencies:
