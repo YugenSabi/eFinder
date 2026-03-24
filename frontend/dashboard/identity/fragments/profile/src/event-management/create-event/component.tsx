@@ -16,6 +16,33 @@ type CreateEventSectionProps = {
   organizers: OrganizerUser[];
 };
 
+const INITIAL_REWARDS: EventFormPayload['rewards'] = [
+  {
+    place: 1,
+    title: '',
+    description: '',
+    additionalInfo: '',
+    platformPoints: '',
+    points: '',
+  },
+  {
+    place: 2,
+    title: '',
+    description: '',
+    additionalInfo: '',
+    platformPoints: '',
+    points: '',
+  },
+  {
+    place: 3,
+    title: '',
+    description: '',
+    additionalInfo: '',
+    platformPoints: '',
+    points: '',
+  },
+];
+
 const INITIAL_FORM: EventFormPayload = {
   title: '',
   description: '',
@@ -25,9 +52,11 @@ const INITIAL_FORM: EventFormPayload = {
   startsAt: '',
   endsAt: '',
   basePoints: '10',
+  difficultyFactor: '',
   rewardSummary: '',
   organizerId: '',
   imageUrl: '',
+  rewards: INITIAL_REWARDS,
 };
 
 export function CreateEventSectionComponent({
@@ -58,11 +87,25 @@ export function CreateEventSectionComponent({
     [eventForm],
   );
 
+  const updateReward = (
+    place: number,
+    field: keyof EventFormPayload['rewards'][number],
+    value: string,
+  ) => {
+    setEventForm((current) => ({
+      ...current,
+      rewards: current.rewards.map((reward) =>
+        reward.place === place ? { ...reward, [field]: value } : reward,
+      ),
+    }));
+  };
+
   return (
     <Box direction="column" gap={16} padding={24} surface="card">
       <Text as="h2" font="headerNav" fontSize={24}>
         {t('createEvent.title')}
       </Text>
+
       <Box direction="column" gap={12}>
         <Input
           label={t('createEvent.fields.title')}
@@ -119,6 +162,15 @@ export function CreateEventSectionComponent({
           }}
         />
         <Input
+          label="Коэффициент сложности"
+          type="number"
+          value={eventForm.difficultyFactor}
+          onChange={(event) => {
+            const { value } = event.currentTarget;
+            setEventForm((current) => ({ ...current, difficultyFactor: value }));
+          }}
+        />
+        <Input
           label={t('createEvent.fields.rewardSummary')}
           value={eventForm.rewardSummary}
           onChange={(event) => {
@@ -129,6 +181,65 @@ export function CreateEventSectionComponent({
             }));
           }}
         />
+
+        <Box direction="column" gap={10}>
+          <Text as="span" font="headerNav" fontSize={16}>
+            Распределение призов по местам
+          </Text>
+
+          {eventForm.rewards.map((reward) => (
+            <Box
+              key={reward.place}
+              direction="column"
+              gap={10}
+              padding={16}
+              borderRadius={18}
+              backgroundColor="background"
+            >
+              <Text as="span" font="headerNav" fontSize={16}>
+                {reward.place} место
+              </Text>
+              <Input
+                label="Название приза"
+                value={reward.title}
+                onChange={(event) => updateReward(reward.place, 'title', event.currentTarget.value)}
+              />
+              <Input
+                label="Описание приза"
+                value={reward.description}
+                onChange={(event) =>
+                  updateReward(reward.place, 'description', event.currentTarget.value)
+                }
+              />
+              <Input
+                label="Дополнительная информация"
+                value={reward.additionalInfo}
+                onChange={(event) =>
+                  updateReward(reward.place, 'additionalInfo', event.currentTarget.value)
+                }
+              />
+              <Box gap={12} wrap="wrap">
+                <Input
+                  label="Баллы платформы"
+                  type="number"
+                  value={reward.platformPoints}
+                  onChange={(event) =>
+                    updateReward(reward.place, 'platformPoints', event.currentTarget.value)
+                  }
+                />
+                <Input
+                  label="Ценность приза"
+                  type="number"
+                  value={reward.points}
+                  onChange={(event) =>
+                    updateReward(reward.place, 'points', event.currentTarget.value)
+                  }
+                />
+              </Box>
+            </Box>
+          ))}
+        </Box>
+
         <Box direction="column" gap={8}>
           <Text as="span" color="secondaryText" fontSize={14}>
             Изображение мероприятия
@@ -154,6 +265,7 @@ export function CreateEventSectionComponent({
             }}
           />
         </Box>
+
         <ChoiceGroupComponent
           label={t('createEvent.fields.direction')}
           value={eventForm.direction}
@@ -170,6 +282,7 @@ export function CreateEventSectionComponent({
             setEventForm((current) => ({ ...current, difficulty: value }))
           }
         />
+
         {organizers.length > 1 ? (
           <Box direction="column" gap={8}>
             <Text as="span" color="secondaryText" fontSize={14}>
@@ -190,6 +303,15 @@ export function CreateEventSectionComponent({
                       organizer.id === eventForm.organizerId ? 'primary' : 'secondary'
                     }
                     font="headerNav"
+                    bg={
+                      organizer.id === eventForm.organizerId ? 'contrastColor' : undefined
+                    }
+                    borderColor="contrastColor"
+                    textColor={
+                      organizer.id === eventForm.organizerId
+                        ? 'primaryBackground'
+                        : 'contrastColor'
+                    }
                     onClick={() =>
                       setEventForm((current) => ({
                         ...current,
@@ -202,14 +324,17 @@ export function CreateEventSectionComponent({
             </Box>
           </Box>
         ) : null}
+
         {organizers.length === 0 ? (
           <Text as="span" color="secondaryText">
             {t('createEvent.noOrganizers')}
           </Text>
         ) : null}
+
         <Button
           label={creatingEvent ? t('createEvent.creating') : t('createEvent.submit')}
           bg="contrastColor"
+          borderColor="contrastColor"
           font="headerNav"
           disabled={creatingEvent || !canSubmit}
           onClick={async () => {
@@ -222,6 +347,7 @@ export function CreateEventSectionComponent({
               setEventForm({
                 ...INITIAL_FORM,
                 organizerId: eventForm.organizerId,
+                rewards: INITIAL_REWARDS.map((reward) => ({ ...reward })),
               });
             } catch (error) {
               setEventMessage(
@@ -232,6 +358,7 @@ export function CreateEventSectionComponent({
             }
           }}
         />
+
         {eventMessage ? (
           <Text as="span" color="secondaryText" fontSize={14}>
             {eventMessage}

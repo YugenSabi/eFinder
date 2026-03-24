@@ -1,6 +1,5 @@
 import {
   Controller,
-  Header,
   Get,
   Delete,
   Param,
@@ -52,10 +51,9 @@ export class ReserveInspectorController {
   }
 
   @Get('participants/:participantId/report')
-  @Header('Content-Type', 'application/pdf')
   async downloadParticipantReport(
     @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
+    @Res() response: Response,
     @Param('participantId') participantId: string,
   ) {
     const currentUser = await this.authService.getAuthenticatedUser(request);
@@ -64,11 +62,13 @@ export class ReserveInspectorController {
       participantId,
     );
 
+    response.status(200);
+    response.setHeader('Content-Type', 'application/pdf');
+    response.setHeader('Content-Length', String(report.buffer.length));
     response.setHeader(
       'Content-Disposition',
       `attachment; filename="${report.fileName}"`,
     );
-
-    return report.buffer;
+    response.end(report.buffer);
   }
 }

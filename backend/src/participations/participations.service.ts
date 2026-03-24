@@ -25,6 +25,10 @@ export class ParticipationsService {
       throw new NotFoundException('Event not found');
     }
 
+    if (event.organizerId === currentUser.id) {
+      throw new ForbiddenException('Organizer cannot register for own event');
+    }
+
     return this.prismaService.participation.upsert({
       where: {
         eventId_participantId: {

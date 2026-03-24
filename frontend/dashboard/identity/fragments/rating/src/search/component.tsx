@@ -1,13 +1,13 @@
-import type { ChangeEvent } from 'react';
-import { Box } from '@ui/layout';
-import { FilterIcon } from '@ui/icons';
+import type {ChangeEvent} from 'react';
+import {FilterIcon} from '@ui/icons';
+import {Box} from '@ui/layout';
 
 type RatingSearchProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
-export function RatingSearch({ value, onChange }: RatingSearchProps) {
+export function RatingSearch({value, onChange}: RatingSearchProps) {
   return (
     <Box width="$full" justifyContent="center" alignItems="center" gap={18}>
       <Box
@@ -20,7 +20,7 @@ export function RatingSearch({ value, onChange }: RatingSearchProps) {
         paddingRight={14}
         alignItems="center"
         gap={12}
-        style={{ boxShadow: '0 2px 3px rgba(0, 0, 0, 0.18)' }}
+        style={{boxShadow: '0 2px 3px rgba(0, 0, 0, 0.18)'}}
       >
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="11" cy="11" r="7" stroke="#1D1A16" strokeWidth="2.5" />

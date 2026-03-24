@@ -14,9 +14,6 @@ export class RatingsService {
         role: {
           in: [UserRole.ADMIN, UserRole.OBSERVER, UserRole.PARTICIPANT],
         },
-        participantProfile: {
-          isNot: null,
-        },
         ...(search
           ? {
               OR: [
@@ -57,9 +54,13 @@ export class RatingsService {
       include: {
         participantProfile: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
-    return users
+    const items = users
+      .filter((user) => user.participantProfile)
       .sort(
         (left, right) =>
           (right.participantProfile?.totalScore ?? 0) -
@@ -67,14 +68,16 @@ export class RatingsService {
       )
       .slice(0, normalizedLimit)
       .map((user, index) => ({
-      place: index + 1,
-      userId: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      city: user.city,
-      totalScore: user.participantProfile?.totalScore ?? 0,
-      reserveForecastScore: user.participantProfile?.reserveForecastScore ?? 0,
+        place: index + 1,
+        userId: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        city: user.city,
+        totalScore: user.participantProfile?.totalScore ?? 0,
+        reserveForecastScore: user.participantProfile?.reserveForecastScore ?? 0,
       }));
+
+    return {items};
   }
 }

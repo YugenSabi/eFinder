@@ -1,23 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { MainLayoutComponent } from '@identity/main-layout';
-import { Box } from '@ui/layout';
-import { useAuth } from '../../../lib/auth/context';
-import { EventHeroSectionComponent } from './hero-section/component';
-import { EventOrganizerSectionComponent } from './organizer-section/component';
-import { EventRewardsSectionComponent } from './rewards-section/component';
-import type { EventDetailsView } from './types';
+import {useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {MainLayoutComponent} from '@identity/main-layout';
+import {Box} from '@ui/layout';
+import {useAuth} from '../../../lib/auth/context';
+import {EventHeroSectionComponent} from './hero-section/component';
+import {EventOrganizerSectionComponent} from './organizer-section/component';
+import {EventRewardsSectionComponent} from './rewards-section/component';
+import type {EventDetailsView} from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
-export function EventDetailsComponent({ event }: EventDetailsView) {
+export function EventDetailsComponent({event}: EventDetailsView) {
   const router = useRouter();
-  const { currentUser } = useAuth();
+  const {currentUser} = useAuth();
   const [registering, setRegistering] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [myStatus, setMyStatus] = useState<string | null>(null);
+  const isOwner = currentUser?.id === event.organizer.id;
 
   useEffect(() => {
     if (!currentUser) {
@@ -35,6 +36,7 @@ export function EventDetailsComponent({ event }: EventDetailsView) {
         if (!response.ok) {
           return null;
         }
+
         return response.json();
       })
       .then((payload) => {
@@ -51,10 +53,11 @@ export function EventDetailsComponent({ event }: EventDetailsView) {
 
   return (
     <MainLayoutComponent>
-      <Box as="main" direction="column" gap={24} width="$full" paddingTop={32} paddingBottom={40}>
+      <Box as="main" direction="column" gap={22} width="$full" paddingTop={24} paddingBottom={40}>
         <EventHeroSectionComponent
           event={event}
           myStatus={myStatus}
+          isOwner={Boolean(isOwner)}
           message={message}
           registering={registering}
           onRegister={async () => {
@@ -63,9 +66,15 @@ export function EventDetailsComponent({ event }: EventDetailsView) {
               return;
             }
 
+            if (isOwner) {
+              setMessage('Организатор не может зарегистрироваться на своё мероприятие');
+              return;
+            }
+
             try {
               setRegistering(true);
               setMessage(null);
+
               const response = await fetch(`${API_URL}/participations`, {
                 method: 'POST',
                 credentials: 'include',
@@ -73,7 +82,7 @@ export function EventDetailsComponent({ event }: EventDetailsView) {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ eventId: event.id }),
+                body: JSON.stringify({eventId: event.id}),
               });
 
               const payload = await response.json().catch(() => null);
@@ -95,11 +104,21 @@ export function EventDetailsComponent({ event }: EventDetailsView) {
             }
           }}
         />
-        <EventOrganizerSectionComponent
-          organizer={event.organizer}
-          onOpenProfile={() => router.push(organizerHref)}
-        />
-        <EventRewardsSectionComponent rewards={event.rewards} />
+
+        <Box
+          width="$full"
+          display="grid"
+          style={{
+            gridTemplateColumns: 'minmax(0, 0.9fr) minmax(0, 1.1fr)',
+            gap: '18px',
+          }}
+        >
+          <EventOrganizerSectionComponent
+            organizer={event.organizer}
+            onOpenProfile={() => router.push(organizerHref)}
+          />
+          <EventRewardsSectionComponent rewards={event.rewards} />
+        </Box>
       </Box>
     </MainLayoutComponent>
   );

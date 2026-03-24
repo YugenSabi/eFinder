@@ -1,14 +1,16 @@
-import { Box } from '@ui/layout';
-import { Text } from '@ui/text';
-import type { AchievementRow } from '../model';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import type {ProfileAchievement} from '../../../../lib/auth/types';
+
+type ProfileAchievementsSectionProps = {
+  achievements: ProfileAchievement[];
+};
 
 export function ProfileAchievementsSection({
   achievements,
-}: {
-  achievements: AchievementRow[];
-}) {
+}: ProfileAchievementsSectionProps) {
   return (
-    <Box direction="column" gap={12} style={{ flex: '1 1 520px', minWidth: 380 }}>
+    <Box direction="column" gap={12} style={{flex: '1 1 520px', minWidth: 380}}>
       <Box justifyContent="center" alignItems="center">
         <Text font="headerNav" fontSize={32}>
           Портфолио достижений
@@ -20,7 +22,7 @@ export function ProfileAchievementsSection({
         padding={10}
         borderRadius={18}
         backgroundColor="cardBg"
-        style={{ boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }}
+        style={{boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)'}}
       >
         {achievements.length === 0 ? (
           <Text font="footerText" fontSize={15}>
@@ -63,7 +65,8 @@ export function ProfileAchievementsSection({
                 backgroundColor="surface"
               >
                 <Text font="headerNav" fontSize={16}>
-                  +{item.score}
+                  +
+                  {item.score}
                 </Text>
               </Box>
             </Box>

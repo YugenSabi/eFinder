@@ -1,8 +1,8 @@
-import { Box } from '@ui/layout';
-import type { RatingRow as RatingRowModel } from '../model';
-import { RatingRow } from '../row';
+import {Box} from '@ui/layout';
+import type {RatingRowModel} from '../types';
+import {RatingRow} from '../row';
 
-export function RatingList({ rows }: { rows: RatingRowModel[] }) {
+export function RatingList({rows}: {rows: RatingRowModel[]}) {
   return (
     <Box direction="column" width="$full" gap={8}>
       {rows.map((row) => (

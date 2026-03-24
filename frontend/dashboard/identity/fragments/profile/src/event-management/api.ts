@@ -29,6 +29,17 @@ async function apiFetch<T>(path: string, init?: RequestInit) {
 }
 
 export function createEvent(payload: EventFormPayload) {
+  const rewards = payload.rewards
+    .map((reward) => ({
+      place: reward.place,
+      title: reward.title.trim(),
+      description: reward.description.trim() || undefined,
+      additionalInfo: reward.additionalInfo.trim() || undefined,
+      platformPoints: reward.platformPoints ? Number(reward.platformPoints) : undefined,
+      points: reward.points ? Number(reward.points) : 0,
+    }))
+    .filter((reward) => reward.title.length > 0);
+
   return apiFetch<{ id: string }>('/events', {
     method: 'POST',
     body: JSON.stringify({
@@ -40,9 +51,13 @@ export function createEvent(payload: EventFormPayload) {
       startsAt: new Date(payload.startsAt).toISOString(),
       endsAt: payload.endsAt ? new Date(payload.endsAt).toISOString() : undefined,
       basePoints: Number(payload.basePoints),
+      difficultyFactor: payload.difficultyFactor
+        ? Number(payload.difficultyFactor)
+        : undefined,
       rewardSummary: payload.rewardSummary || undefined,
       organizerId: payload.organizerId || undefined,
       imageUrl: payload.imageUrl || undefined,
+      rewards: rewards.length > 0 ? rewards : undefined,
     }),
   });
 }

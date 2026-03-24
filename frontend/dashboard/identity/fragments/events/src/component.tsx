@@ -1,23 +1,51 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Box } from '@ui/layout';
-import { Text } from '@ui/text';
-import { MainLayoutComponent } from '@identity/main-layout';
-import { CardComponent, type EventCardModel } from './card/component';
-import { getEvents, type EventApiItem } from './api';
-import { EventsSearchComponent } from './search/component';
+import {useEffect, useMemo, useState} from 'react';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import {MainLayoutComponent} from '@identity/main-layout';
+import {CardComponent, type EventCardModel} from './card/component';
+import {getEvents, type EventApiItem} from './api';
+import {EventsSearchComponent} from './search/component';
 
 export function EventsComponent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [events, setEvents] = useState<EventApiItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
 
   useEffect(() => {
-    getEvents()
-      .then(setEvents)
-      .finally(() => setLoading(false));
-  }, []);
+    let cancelled = false;
+
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        setLoading(true);
+        setPageError(null);
+
+        const nextEvents = await getEvents(searchQuery);
+
+        if (!cancelled) {
+          setEvents(nextEvents);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setEvents([]);
+          setPageError(
+            error instanceof Error ? error.message : 'Не удалось загрузить мероприятия',
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }, 250);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [searchQuery]);
 
   const eventCards = useMemo<EventCardModel[]>(
     () =>
@@ -37,21 +65,14 @@ export function EventsComponent() {
     [events],
   );
 
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-  const filteredEvents = eventCards.filter((event) => {
-    if (!normalizedQuery) return true;
-
-    return [event.title, event.description, ...event.tags]
-      .join(' ')
-      .toLowerCase()
-      .includes(normalizedQuery);
-  });
-
   return (
     <MainLayoutComponent>
       <Box as="main" direction="column" width="$full" gap={18} paddingTop={18} paddingBottom={36}>
         <EventsSearchComponent value={searchQuery} onChange={setSearchQuery} />
-        {loading ? <Text as="span">Загружаем мероприятия...</Text> : null}
+
+        {pageError ? <Text color="danger">{pageError}</Text> : null}
+        {loading ? <Text>Загружаем мероприятия...</Text> : null}
+        {!loading && !pageError && eventCards.length === 0 ? <Text>Ничего не найдено</Text> : null}
 
         <Box
           width="$full"
@@ -62,7 +83,7 @@ export function EventsComponent() {
             rowGap: '10px',
           }}
         >
-          {filteredEvents.map((event) => (
+          {eventCards.map((event) => (
             <Box key={event.id} width="$full">
               <CardComponent event={event} />
             </Box>

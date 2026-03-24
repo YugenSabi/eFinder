@@ -35,11 +35,7 @@ export function getApiUrl() {
 }
 
 export function startBrowserFlow(flowType: FlowType) {
-  const returnTo = new URL(window.location.pathname, window.location.origin);
-
-  window.location.assign(
-    `${getKratosPublicUrl()}/self-service/${flowType}/browser?return_to=${encodeURIComponent(returnTo.toString())}`,
-  );
+  window.location.assign(`${getKratosPublicUrl()}/self-service/${flowType}/browser`);
 }
 
 export async function getBrowserFlow(flowType: FlowType, flowId: string) {

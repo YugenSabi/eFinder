@@ -33,11 +33,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const locale = await getLocale();
   const messages = await getMessages();
   const currentUser = await getServerCurrentUser();
+  const timeZone = 'Europe/Moscow';
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${underratedFont.variable} ${geologicaFont.variable} ${delaGothicOneFont.variable}`}>
-        <AppProviders locale={locale} messages={messages} initialUser={currentUser}>
+        <AppProviders
+          locale={locale}
+          messages={messages}
+          initialUser={currentUser}
+          timeZone={timeZone}
+        >
           {children}
         </AppProviders>
       </body>

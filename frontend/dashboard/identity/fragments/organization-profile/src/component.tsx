@@ -12,14 +12,15 @@ export function OrganizationProfileComponent({
   organization,
   events,
 }: OrganizationProfileView) {
-
   return (
     <MainLayoutComponent>
-      <Box as="main" direction="column" gap={24} width="$full" paddingTop={32} paddingBottom={40}>
+      <Box as="main" direction="column" gap={28} width="$full" paddingTop={34} paddingBottom={40}>
         <OrganizationSummarySectionComponent organization={organization} />
+        <Box gap={18} alignItems="stretch" flexWrap="wrap">
+          <OrganizationRewardsSectionComponent organization={organization} />
+          <OrganizationEventsSectionComponent events={events} />
+        </Box>
         <OrganizationLinksSectionComponent organization={organization} />
-        <OrganizationRewardsSectionComponent organization={organization} />
-        <OrganizationEventsSectionComponent events={events} />
       </Box>
     </MainLayoutComponent>
   );

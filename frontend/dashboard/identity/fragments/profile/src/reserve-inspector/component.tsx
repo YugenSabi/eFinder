@@ -63,8 +63,25 @@ export function ObserverComponent() {
 
   return (
     <MainLayoutComponent>
-      <Box as="main" direction="column" width="$full" gap={20} paddingTop={48} paddingBottom={48}>
-        <Box direction="column" gap={8}>
+      <Box
+        as="main"
+        direction="column"
+        width="$full"
+        maxWidth={1240}
+        marginLeft="auto"
+        marginRight="auto"
+        gap={24}
+        paddingTop={48}
+        paddingBottom={48}
+      >
+        <Box
+          direction="column"
+          gap={8}
+          padding={28}
+          surface="card"
+          radius="xl"
+          style={{ boxShadow: '-3px 3px 10px rgba(0, 0, 0, 0.12)' }}
+        >
           <Text as="h1" font="headerNav" fontSize={38}>
             {t('title')}
           </Text>
@@ -82,7 +99,14 @@ export function ObserverComponent() {
         ) : null}
 
         {loading ? (
-          <Text as="span">{t('loading')}</Text>
+          <Box
+            padding={24}
+            surface="card"
+            radius="xl"
+            style={{ boxShadow: '-3px 3px 10px rgba(0, 0, 0, 0.12)' }}
+          >
+            <Text as="span">{t('loading')}</Text>
+          </Box>
         ) : (
           <ObserverParticipantsListComponent
             participants={participants}

@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {getBrowserFlow, getCsrfToken, startBrowserFlow, submitLoginFlow, syncCurrentUser} from '../../../lib/kratos';
+import {getBrowserFlow, getCsrfToken, submitLoginFlow, syncCurrentUser} from '../../../lib/kratos';
 import { MainLayoutComponent } from '@identity/main-layout';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
@@ -39,7 +39,6 @@ export function LoginComponent() {
     const nextFlowId = searchParams.get('flow');
 
     if (!nextFlowId) {
-      startBrowserFlow('login');
       return;
     }
 
@@ -69,7 +68,7 @@ export function LoginComponent() {
 
   const onSubmit = async (data: TypeLoginSchema) => {
     if (!flowId) {
-      startBrowserFlow('login');
+      setSubmitError(t('errorDefault'));
       return;
     }
 

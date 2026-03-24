@@ -6,7 +6,6 @@ import {
   getCsrfToken,
   getVerificationConfirmPath,
   requestOrganizerAccess,
-  startBrowserFlow,
   submitRegistrationFlow,
   syncCurrentUser,
 } from '../../../lib/kratos';
@@ -63,7 +62,6 @@ export function RegistrationComponent() {
     const nextFlowId = searchParams.get('flow');
 
     if (!nextFlowId) {
-      startBrowserFlow('registration');
       return;
     }
 
@@ -93,7 +91,7 @@ export function RegistrationComponent() {
 
   const onSubmit = async (data: TypeRegisterSchema) => {
     if (!flowId) {
-      startBrowserFlow('registration');
+      setSubmitError(t('errorDefault'));
       return;
     }
 
@@ -160,12 +158,26 @@ export function RegistrationComponent() {
               label={t('accountType.participant')}
               variant={form.watch('accountType') === 'participant' ? 'primary' : 'secondary'}
               font="headerNav"
+              bg={form.watch('accountType') === 'participant' ? 'contrastColor' : undefined}
+              borderColor="contrastColor"
+              textColor={
+                form.watch('accountType') === 'participant'
+                  ? 'primaryBackground'
+                  : 'contrastColor'
+              }
               onClick={() => form.setValue('accountType', 'participant')}
             />
             <Button
               label={t('accountType.organizer')}
               variant={form.watch('accountType') === 'organizer' ? 'primary' : 'secondary'}
               font="headerNav"
+              bg={form.watch('accountType') === 'organizer' ? 'contrastColor' : undefined}
+              borderColor="contrastColor"
+              textColor={
+                form.watch('accountType') === 'organizer'
+                  ? 'primaryBackground'
+                  : 'contrastColor'
+              }
               onClick={() => form.setValue('accountType', 'organizer')}
             />
           </Box>

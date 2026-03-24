@@ -12,6 +12,7 @@ export type ObserverParticipant = {
 };
 
 export type ObserverFilters = {
+  search: string;
   city: string;
   ageFrom: string;
   ageTo: string;

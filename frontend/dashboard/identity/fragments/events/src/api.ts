@@ -36,6 +36,15 @@ export type EventApiItem = {
   };
 };
 
-export function getEvents() {
-  return apiFetch<EventApiItem[]>('/events');
+export function getEvents(search?: string) {
+  const params = new URLSearchParams();
+  const normalizedSearch = search?.trim();
+
+  if (normalizedSearch) {
+    params.set('search', normalizedSearch);
+  }
+
+  const query = params.toString();
+
+  return apiFetch<EventApiItem[]>(query ? `/events?${query}` : '/events');
 }

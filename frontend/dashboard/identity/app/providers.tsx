@@ -9,6 +9,7 @@ type AppProvidersProps = PropsWithChildren<{
   locale: string;
   messages: Record<string, unknown>;
   initialUser: AuthUser;
+  timeZone: string;
 }>;
 
 export function AppProviders({
@@ -16,9 +17,10 @@ export function AppProviders({
   locale,
   messages,
   initialUser,
+  timeZone,
 }: AppProvidersProps) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
       <AuthProvider initialUser={initialUser}>{children}</AuthProvider>
     </NextIntlClientProvider>
   );

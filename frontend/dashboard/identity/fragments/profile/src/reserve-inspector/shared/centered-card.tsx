@@ -27,6 +27,7 @@ export function ObserverCenteredCard({
         <Button
           label={actionLabel}
           bg="contrastColor"
+          borderColor="contrastColor"
           font="headerNav"
           onClick={onAction}
         />

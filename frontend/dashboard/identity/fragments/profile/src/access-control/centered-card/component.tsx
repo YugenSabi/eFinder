@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@ui/button';
-import { Box } from '@ui/layout';
-import { Text } from '@ui/text';
+import {Button} from '@ui/button';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
 
 type CenteredCardProps = {
   title: string;
@@ -18,13 +18,37 @@ export function CenteredCardComponent({
   onAction,
 }: CenteredCardProps) {
   return (
-    <Box as="main" width="$full" justifyContent="center" alignItems="center" paddingTop={48} paddingBottom={48}>
-      <Box direction="column" width="$full" maxWidth={520} gap={16} padding={32} surface="card">
-        <Text as="h1" font="headerNav" fontSize={38}>
+    <Box
+      as="main"
+      width="$full"
+      justifyContent="center"
+      alignItems="center"
+      paddingTop={48}
+      paddingBottom={48}
+    >
+      <Box
+        direction="column"
+        width="$full"
+        maxWidth={560}
+        gap={16}
+        padding={32}
+        borderRadius={24}
+        backgroundColor="cardBg"
+        style={{boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)'}}
+      >
+        <Text font="headerNav" fontSize={38}>
           {title}
         </Text>
-        <Text as="p">{description}</Text>
-        <Button label={actionLabel} bg="contrastColor" font="headerNav" onClick={onAction} />
+        <Text font="footerText" fontSize={15}>
+          {description}
+        </Text>
+        <Button
+          label={actionLabel}
+          bg="contrastColor"
+          borderColor="contrastColor"
+          font="headerNav"
+          onClick={onAction}
+        />
       </Box>
     </Box>
   );

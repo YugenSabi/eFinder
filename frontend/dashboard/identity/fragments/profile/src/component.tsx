@@ -137,7 +137,6 @@ export function ProfileComponent() {
           logoutLoadingLabel={t('logoutLoading')}
           loggingOut={loggingOut}
           onLogout={logout}
-          onProfileUpdated={setCurrentUser}
           actionLabel={
             currentUser.role === 'ADMIN'
               ? t('actions.accessControl')

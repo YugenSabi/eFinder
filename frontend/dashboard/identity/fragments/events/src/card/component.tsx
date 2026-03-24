@@ -1,8 +1,8 @@
-import { useRouter } from 'next/navigation';
-import { Box } from '@ui/layout';
-import { Button } from '@ui/button';
-import { Text } from '@ui/text';
-import { EventCardTags } from './tags';
+import {useRouter} from 'next/navigation';
+import {Button} from '@ui/button';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import {EventCardTags} from './tags';
 
 export type EventCardModel = {
   id: string;
@@ -17,11 +17,21 @@ type CardComponentProps = {
   event: EventCardModel;
 };
 
-export function CardComponent({ event }: CardComponentProps) {
+export function CardComponent({event}: CardComponentProps) {
   const router = useRouter();
 
   return (
-    <Box gap={10} alignItems="flex-start" style={{ flexWrap: 'nowrap', boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }} padding={10} borderRadius={20}>
+    <Box
+      gap={10}
+      alignItems="flex-start"
+      style={{
+        flexWrap: 'nowrap',
+        boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)',
+      }}
+      padding={10}
+      backgroundColor="background"
+      borderRadius={20}
+    >
       <Box
         width={220}
         minWidth={220}
@@ -31,13 +41,13 @@ export function CardComponent({ event }: CardComponentProps) {
         justifyContent="center"
         alignItems="center"
         overflow="hidden"
-        style={{ flex: '0 0 164px' }}
+        style={{flex: '0 0 164px'}}
       >
         {event.imageUrl ? (
           <img
             src={event.imageUrl}
             alt={event.title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            style={{width: '100%', height: '100%', objectFit: 'cover'}}
           />
         ) : (
           <Text font="headerNav" fontSize={22} color="secondaryText">
@@ -46,7 +56,7 @@ export function CardComponent({ event }: CardComponentProps) {
         )}
       </Box>
 
-      <Box direction="column" gap={8} style={{ flex: '1 1 auto', minWidth: 0 }}>
+      <Box direction="column" gap={8} style={{flex: '1 1 auto'}}>
         <Text font="headerNav" fontSize={18}>
           {event.title}
         </Text>
@@ -67,14 +77,18 @@ export function CardComponent({ event }: CardComponentProps) {
 
         <EventCardTags tags={event.tags} />
 
-        <Button
-          label="Подробнее"
-          bg="contrastColor"
-          textColor="surface"
-          font="headerNav"
-          fontSize={11}
-          onClick={() => router.push(`/events/${event.id}`)}
-        />
+        <Box style={{alignSelf: 'flex-start'}}>
+          <Button
+            label="Подробнее"
+            size="md"
+            bg="contrastColor"
+            textColor="surface"
+            font="headerNav"
+            fontSize={10}
+            style={{height: 25, padding: '10px', borderRadius: '7px'}}
+            onClick={() => router.push(`/events/${event.id}`)}
+          />
+        </Box>
       </Box>
     </Box>
   );

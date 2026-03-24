@@ -21,14 +21,21 @@ export function ObserverParticipantsListComponent({
 
   if (participants.length === 0) {
     return (
-      <Text as="span" color="secondaryText">
-        {t('empty')}
-      </Text>
+      <Box
+        padding={24}
+        surface="card"
+        radius="xl"
+        style={{ boxShadow: '-3px 3px 10px rgba(0, 0, 0, 0.12)' }}
+      >
+        <Text as="span" color="secondaryText">
+          {t('empty')}
+        </Text>
+      </Box>
     );
   }
 
   return (
-    <Box direction="column" gap={12}>
+    <Box direction="column" gap={14}>
       {participants.map((participant) => (
         <ObserverParticipantCard
           key={participant.id}

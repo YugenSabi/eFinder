@@ -1,10 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { Button } from '@ui/button';
-import { Box } from '@ui/layout';
-import { Text } from '@ui/text';
-import type { OrganizationProfileView } from '../types';
+import {useRouter} from 'next/navigation';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import type {OrganizationProfileView} from '../types';
 
 type OrganizationEventsSectionProps = Pick<OrganizationProfileView, 'events'>;
 
@@ -14,25 +13,32 @@ export function OrganizationEventsSectionComponent({
   const router = useRouter();
 
   return (
-    <Box direction="column" gap={12} padding={24} surface="card">
-      <Text as="h2" font="headerNav" fontSize={24}>
-        Все мероприятия
+    <Box
+      direction="column"
+      gap={14}
+      padding={16}
+      borderRadius={24}
+      backgroundColor="cardBg"
+      style={{flex: '1 1 520px', minWidth: 360, boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)'}}
+    >
+      <Text font="headerNav" fontSize={24} style={{textAlign: 'center'}}>
+        Последние мероприятия
       </Text>
       {events.length > 0 ? (
         events.map((event) => (
           <Box
             key={event.id}
             gap={14}
-            padding={16}
-            borderRadius={20}
+            padding={14}
+            borderRadius={18}
             backgroundColor="background"
-            alignItems="center"
+            alignItems="stretch"
           >
             <Box
-              width={96}
-              minWidth={96}
-              height={96}
-              borderRadius={16}
+              width={148}
+              minWidth={148}
+              height={148}
+              borderRadius={18}
               backgroundColor="cardBg"
               overflow="hidden"
               justifyContent="center"
@@ -42,32 +48,53 @@ export function OrganizationEventsSectionComponent({
                 <img
                   src={event.imageUrl}
                   alt={event.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{width: '100%', height: '100%', objectFit: 'cover'}}
                 />
               ) : (
-                <Text font="headerNav" fontSize={14}>
-                  {event.title}
+                <Text font="headerNav" fontSize={16}>
+                  eFinder
                 </Text>
               )}
             </Box>
-            <Box direction="column" gap={6} flexGrow={1}>
-              <Text as="span" font="headerNav" fontSize={18}>
+            <Box direction="column" gap={8} flexGrow={1} style={{minWidth: 0}}>
+              <Text font="headerNav" fontSize={18}>
                 {event.title}
               </Text>
-              <Text as="span" color="secondaryText">
-                {(event.city ?? 'Онлайн')} · {new Date(event.startsAt).toLocaleDateString('ru-RU')}
+              <Text font="footerText" fontSize={13}>
+                {(event.city ?? 'Онлайн')} • {new Date(event.startsAt).toLocaleDateString('ru-RU')}
               </Text>
+              <Box alignItems="flex-start">
+                <Box
+                  as="button"
+                  type="button"
+                  onClick={() => router.push(`/events/${event.id}`)}
+                  height={28}
+                  borderRadius={12}
+                  backgroundColor="contrastColor"
+                  justifyContent="center"
+                  alignItems="center"
+                  style={{border: 'none', cursor: 'pointer', padding: '0 10px'}}
+                >
+                  <Text font="headerNav" fontSize={10} color="surface">
+                    Подробнее
+                  </Text>
+                </Box>
+              </Box>
             </Box>
-            <Button
-              label="Открыть"
-              variant="secondary"
-              font="headerNav"
-              onClick={() => router.push(`/events/${event.id}`)}
-            />
           </Box>
         ))
       ) : (
-        <Text as="span">Мероприятий пока нет</Text>
+        <Box
+          padding={18}
+          borderRadius={16}
+          backgroundColor="background"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Text font="footerText" fontSize={14}>
+            Мероприятий пока нет
+          </Text>
+        </Box>
       )}
     </Box>
   );

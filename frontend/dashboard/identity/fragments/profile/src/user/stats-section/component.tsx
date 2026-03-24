@@ -1,12 +1,34 @@
-import { Box } from '@ui/layout';
-import { Text } from '@ui/text';
-import type { StatPoint } from '../model';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import type {ProfileStat} from '../../../../lib/auth/types';
 
-function RadarChart({ points }: { points: StatPoint[] }) {
+type StatPoint = {
+  label: string;
+  value: number;
+};
+
+function mapStats(stats: ProfileStat[]): StatPoint[] {
+  const labels: Record<string, string> = {
+    IT: 'IT',
+    SOCIAL: 'Soc',
+    MEDIA: 'Med',
+    EDUCATION: 'Edu',
+    VOLUNTEERING: 'Vol',
+    OTHER: 'Oth',
+  };
+
+  return stats.map((item) => ({
+    label: labels[item.label] ?? item.label,
+    value: item.value,
+  }));
+}
+
+function RadarChart({points}: {points: StatPoint[]}) {
   const size = 300;
   const center = size / 2;
   const radius = 108;
   const levels = 4;
+  const maxValue = Math.max(...points.map((point) => point.value), 1);
 
   const polygon = (scale: number) =>
     points
@@ -21,7 +43,7 @@ function RadarChart({ points }: { points: StatPoint[] }) {
   const dataPolygon = points
     .map((point, index) => {
       const angle = (Math.PI * 2 * index) / points.length - Math.PI / 2;
-      const normalized = Math.max(0.1, Math.min(point.value, 100) / 100);
+      const normalized = Math.max(0.12, Math.min(point.value / maxValue, 1));
       const x = center + Math.cos(angle) * radius * normalized;
       const y = center + Math.sin(angle) * radius * normalized;
       return `${x},${y}`;
@@ -29,8 +51,13 @@ function RadarChart({ points }: { points: StatPoint[] }) {
     .join(' ');
 
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} width="100%" height="100%" aria-label="Статистика направлений">
-      {Array.from({ length: levels }, (_, index) => {
+    <svg
+      viewBox={`0 0 ${size} ${size}`}
+      width="100%"
+      height="100%"
+      aria-label="Статистика направлений"
+    >
+      {Array.from({length: levels}, (_, index) => {
         const scale = (index + 1) / levels;
         return (
           <polygon
@@ -81,9 +108,11 @@ function RadarChart({ points }: { points: StatPoint[] }) {
   );
 }
 
-export function ProfileStatsSection({ stats }: { stats: StatPoint[] }) {
+export function ProfileStatsSection({stats}: {stats: ProfileStat[]}) {
+  const points = mapStats(stats);
+
   return (
-    <Box direction="column" gap={12} style={{ flex: '1 1 420px', minWidth: 360 }}>
+    <Box direction="column" gap={12} style={{flex: '1 1 420px', minWidth: 360}}>
       <Box justifyContent="center" alignItems="center">
         <Text font="headerNav" fontSize={32}>
           Статистика направлений
@@ -100,13 +129,13 @@ export function ProfileStatsSection({ stats }: { stats: StatPoint[] }) {
           boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)',
         }}
       >
-        {stats.length === 0 ? (
+        {points.length === 0 ? (
           <Text font="footerText" fontSize={15}>
             Пока нет данных по направлениям
           </Text>
         ) : (
-          <Box width="$full" style={{ maxWidth: 355, aspectRatio: '1 / 1' }}>
-            <RadarChart points={stats} />
+          <Box width="$full" style={{maxWidth: 355, aspectRatio: '1 / 1'}}>
+            <RadarChart points={points} />
           </Box>
         )}
       </Box>

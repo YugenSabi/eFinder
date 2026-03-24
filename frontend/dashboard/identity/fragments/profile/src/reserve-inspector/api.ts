@@ -30,6 +30,7 @@ async function apiFetch<T>(path: string, init?: RequestInit) {
 export function getParticipants(filters: ObserverFilters) {
   const searchParams = new URLSearchParams();
 
+  if (filters.search) searchParams.set('search', filters.search);
   if (filters.city) searchParams.set('city', filters.city);
   if (filters.ageFrom) searchParams.set('ageFrom', filters.ageFrom);
   if (filters.ageTo) searchParams.set('ageTo', filters.ageTo);
@@ -60,4 +61,29 @@ export function removeFavorite(participantId: string) {
   return apiFetch(`/reserve-inspector/favorites/${participantId}`, {
     method: 'DELETE',
   });
+}
+
+export async function downloadParticipantReport(participantId: string) {
+  const response = await fetch(
+    `${API_URL}/reserve-inspector/participants/${participantId}/report`,
+    {
+      credentials: 'include',
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/pdf',
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Не удалось скачать отчет');
+  }
+
+  const buffer = await response.arrayBuffer();
+  const blob = new Blob([buffer], { type: 'application/pdf' });
+  const header = response.headers.get('Content-Disposition') ?? '';
+  const fileNameMatch = /filename=\"?([^"]+)\"?/i.exec(header);
+  const fileName = fileNameMatch?.[1] ?? `participant-report-${participantId}.pdf`;
+
+  return { blob, fileName };
 }

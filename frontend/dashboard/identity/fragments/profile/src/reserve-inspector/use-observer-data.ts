@@ -5,6 +5,7 @@ import { addFavorite, getParticipants, removeFavorite } from './api';
 import type { ObserverFilters, ObserverParticipant } from './types';
 
 const INITIAL_FILTERS: ObserverFilters = {
+  search: '',
   city: '',
   ageFrom: '',
   ageTo: '',
@@ -20,6 +21,7 @@ export function useObserverData(enabled: boolean) {
   const [error, setError] = useState<string | null>(null);
   const [participants, setParticipants] = useState<ObserverParticipant[]>([]);
   const [filters, setFilters] = useState<ObserverFilters>(INITIAL_FILTERS);
+  const [appliedFilters, setAppliedFilters] = useState<ObserverFilters>(INITIAL_FILTERS);
   const [favoriteActionId, setFavoriteActionId] = useState<string | null>(null);
 
   const load = useCallback(async (nextFilters: ObserverFilters) => {
@@ -42,8 +44,20 @@ export function useObserverData(enabled: boolean) {
   }, [enabled]);
 
   useEffect(() => {
-    void load(filters);
-  }, [filters, load]);
+    if (!enabled) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setAppliedFilters(filters);
+    }, 250);
+
+    return () => window.clearTimeout(timeout);
+  }, [enabled, filters]);
+
+  useEffect(() => {
+    void load(appliedFilters);
+  }, [appliedFilters, load]);
 
   const toggleFavorite = useCallback(async (participant: ObserverParticipant) => {
     setFavoriteActionId(participant.id);

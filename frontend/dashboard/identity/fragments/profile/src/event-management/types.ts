@@ -31,7 +31,16 @@ export type EventFormPayload = {
   startsAt: string;
   endsAt: string;
   basePoints: string;
+  difficultyFactor: string;
   rewardSummary: string;
   organizerId: string;
   imageUrl: string;
+  rewards: Array<{
+    place: number;
+    title: string;
+    description: string;
+    additionalInfo: string;
+    platformPoints: string;
+    points: string;
+  }>;
 };

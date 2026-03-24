@@ -1,6 +1,6 @@
-import { Box } from '@ui/layout';
-import { Text } from '@ui/text';
-import type { OrganizationProfileView } from '../types';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import type {OrganizationProfileView} from '../types';
 
 type OrganizationRewardsSectionProps = Pick<OrganizationProfileView, 'organization'>;
 
@@ -10,18 +10,44 @@ export function OrganizationRewardsSectionComponent({
   const organizerProfile = organization.organizerProfile;
 
   return (
-    <Box direction="column" gap={12} padding={24} surface="card">
-      <Text as="h2" font="headerNav" fontSize={24}>
-        Частые призы
+    <Box
+      direction="column"
+      gap={14}
+      padding={16}
+      borderRadius={24}
+      backgroundColor="cardBg"
+      style={{flex: '1 1 420px', minWidth: 320, boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)'}}
+    >
+      <Text font="headerNav" fontSize={24} style={{textAlign: 'center'}}>
+        Список призов
       </Text>
       {organizerProfile?.commonRewardTypes?.length ? (
         organizerProfile.commonRewardTypes.map((reward) => (
-          <Text key={reward} as="span">
-            • {reward}
-          </Text>
+          <Box
+            key={reward}
+            padding={18}
+            borderRadius={16}
+            backgroundColor="background"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Text font="headerNav" fontSize={18}>
+              {reward}
+            </Text>
+          </Box>
         ))
       ) : (
-        <Text as="span">Пока нет данных</Text>
+        <Box
+          padding={18}
+          borderRadius={16}
+          backgroundColor="background"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Text font="footerText" fontSize={14}>
+            Призы пока не добавлены
+          </Text>
+        </Box>
       )}
     </Box>
   );

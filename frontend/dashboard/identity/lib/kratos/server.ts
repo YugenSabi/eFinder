@@ -20,14 +20,20 @@ export async function getServerCurrentUser(): Promise<AuthUser> {
     return null;
   }
 
-  const response = await fetch(`${getApiUrl()}/auth/me`, {
-    method: 'GET',
-    cache: 'no-store',
-    headers: {
-      Accept: 'application/json',
-      Cookie: cookieHeader,
-    },
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${getApiUrl()}/auth/me`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json',
+        Cookie: cookieHeader,
+      },
+    });
+  } catch {
+    return null;
+  }
 
   if (response.status === 401 || !response.ok) {
     return null;
@@ -38,10 +44,7 @@ export async function getServerCurrentUser(): Promise<AuthUser> {
 
 export function getBrowserFlowRedirectUrl(
   flowType: 'login' | 'registration' | 'verification',
-  returnPath: string,
+  _returnPath: string,
 ) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-  const returnTo = new URL(returnPath, appUrl);
-
-  return `${getKratosPublicUrl()}/self-service/${flowType}/browser?return_to=${encodeURIComponent(returnTo.toString())}`;
+  return `${getKratosPublicUrl()}/self-service/${flowType}/browser`;
 }

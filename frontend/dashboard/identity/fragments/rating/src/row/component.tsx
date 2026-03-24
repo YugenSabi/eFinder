@@ -1,19 +1,19 @@
-import { Box } from '@ui/layout';
-import { Text } from '@ui/text';
-import type { RatingRow as RatingRowModel } from '../model';
+import {Box} from '@ui/layout';
+import {Text} from '@ui/text';
+import type {RatingRowModel} from '../types';
 
-export function RatingRow({ row }: { row: RatingRowModel }) {
+export function RatingRow({row}: {row: RatingRowModel}) {
   return (
     <Box
       width="$full"
       height={54}
       borderRadius={14}
-      backgroundColor="surface"
+      backgroundColor="background"
       alignItems="center"
       justifyContent="space-between"
       paddingLeft={10}
       paddingRight={10}
-      style={{ boxShadow: '0 2px 3px rgba(0, 0, 0, 0.18)' }}
+      style={{boxShadow: '0 2px 3px rgba(0, 0, 0, 0.18)'}}
     >
       <Box
         width={38}
@@ -28,7 +28,13 @@ export function RatingRow({ row }: { row: RatingRowModel }) {
         </Text>
       </Box>
 
-      <Box flexGrow={1} justifyContent="center" alignItems="center" paddingLeft={16} paddingRight={16}>
+      <Box
+        flexGrow={1}
+        justifyContent="center"
+        alignItems="center"
+        paddingLeft={16}
+        paddingRight={16}
+      >
         <Text font="footerText" fontSize={16}>
           {row.fullName}
         </Text>

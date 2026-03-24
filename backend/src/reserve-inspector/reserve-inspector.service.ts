@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { existsSync } from 'node:fs';
 import PDFDocument = require('pdfkit');
 import {
   EventDirection,
@@ -373,11 +374,14 @@ export class ReserveInspectorService {
         },
       });
 
-      document.registerFont(
-        'ReportFont',
-        '/System/Library/Fonts/Supplemental/Arial Unicode.ttf',
-      );
-      document.font('ReportFont');
+      const fontPath = this.resolveReportFontPath();
+
+      if (fontPath) {
+        document.registerFont('ReportFont', fontPath);
+        document.font('ReportFont');
+      } else {
+        document.font('Helvetica');
+      }
       document.fontSize(11);
 
       document.on('data', (chunk: Buffer) => {
@@ -395,9 +399,9 @@ export class ReserveInspectorService {
         }
 
         if (/^(Profile|Summary|Scores by direction|Event history)$/.test(line)) {
-          document.font('ReportFont').fontSize(13).text(line);
+          document.font(fontPath ? 'ReportFont' : 'Helvetica').fontSize(13).text(line);
           document.moveDown(0.2);
-          document.font('ReportFont').fontSize(11);
+          document.font(fontPath ? 'ReportFont' : 'Helvetica').fontSize(11);
           continue;
         }
 
@@ -408,5 +412,27 @@ export class ReserveInspectorService {
 
       document.end();
     });
+  }
+
+  private resolveReportFontPath() {
+    const candidatePaths = process.platform === 'win32'
+      ? [
+          'C:\\Windows\\Fonts\\arial.ttf',
+          'C:\\Windows\\Fonts\\ARIAL.TTF',
+          'C:\\Windows\\Fonts\\calibri.ttf',
+        ]
+      : process.platform === 'darwin'
+        ? [
+            '/System/Library/Fonts/Supplemental/Arial Unicode.ttf',
+            '/System/Library/Fonts/Supplemental/Arial.ttf',
+            '/Library/Fonts/Arial.ttf',
+          ]
+        : [
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+            '/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf',
+            '/usr/share/fonts/truetype/freefont/FreeSans.ttf',
+          ];
+
+    return candidatePaths.find((path) => existsSync(path));
   }
 }

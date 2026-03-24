@@ -1,8 +1,12 @@
+import { useRouter } from 'next/navigation';
+import { Button } from '@ui/button';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import type { ActivityEvent } from '../model';
 
 export function ActivityEventCard({ event }: { event: ActivityEvent }) {
+  const router = useRouter();
+
   return (
     <Box gap={10} alignItems="flex-start" width="$full" style={{ flexWrap: 'nowrap', boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }} backgroundColor={"cardBg"} padding={10} borderRadius={20} marginBottom={5} marginLeft={5}>
       <Box
@@ -52,6 +56,19 @@ export function ActivityEventCard({ event }: { event: ActivityEvent }) {
               </Text>
             </Box>
           ))}
+        </Box>
+
+        <Box style={{ alignSelf: 'flex-start' }}>
+            <Button
+                label="Подробнее"
+                size="md"
+                bg="contrastColor"
+                textColor="surface"
+                font="headerNav"
+                fontSize={10}
+                style={{height: 25, padding: '10px', borderRadius: '7px'}}
+                onClick={() => router.push(`/events/${event.id}`)}
+            />
         </Box>
       </Box>
     </Box>

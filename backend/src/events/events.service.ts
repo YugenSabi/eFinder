@@ -344,15 +344,26 @@ export class EventsService {
       orderBy: {
         startsAt: 'desc',
       },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        city: true,
+        direction: true,
+        difficulty: true,
+        startsAt: true,
+        imageUrl: true,
         organizer: {
-          include: {
-            organizerProfile: true,
-          },
-        },
-        rewards: {
-          orderBy: {
-            place: 'asc',
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            organizerProfile: {
+              select: {
+                organizationName: true,
+              },
+            },
           },
         },
       },
@@ -362,20 +373,45 @@ export class EventsService {
   findOne(id: string) {
     return this.prismaService.event.findUniqueOrThrow({
       where: {id},
-      include: {
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        city: true,
+        direction: true,
+        difficulty: true,
+        startsAt: true,
+        imageUrl: true,
         organizer: {
-          include: {
-            organizerProfile: true,
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            organizerProfile: {
+              select: {
+                organizationName: true,
+              },
+            },
           },
         },
         rewards: {
-          orderBy: {
-            place: 'asc',
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            points: true,
           },
         },
         participations: {
-          include: {
-            participant: true,
+          select: {
+            id: true,
+            status: true,
+            participant: {
+              select: {
+                id: true,
+              },
+            },
           },
           orderBy: {
             createdAt: 'desc',
