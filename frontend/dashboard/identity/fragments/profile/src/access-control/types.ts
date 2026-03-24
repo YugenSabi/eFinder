@@ -6,8 +6,13 @@ export type AdminUser = {
   city?: string | null;
   age?: number | null;
   role?: string;
+  organizerProfile?: {
+    organizationName?: string | null;
+    status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  } | null;
 };
 
 export type AdminPageData = {
   users: AdminUser[];
+  organizerRequests: AdminUser[];
 };

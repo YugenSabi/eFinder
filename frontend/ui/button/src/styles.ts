@@ -19,20 +19,26 @@ export function variantStyle(variant: ButtonVariant): CSSProperties {
     case 'ghost':
       return {
         backgroundColor: 'transparent',
-        border: 'none',
+        borderWidth: 0,
+        borderStyle: 'solid',
+        borderColor: 'transparent',
         color: cssVarColor('primaryText'),
       };
     case 'secondary':
       return {
         backgroundColor: 'transparent',
-        border: '1px solid ' + cssVarColor('border'),
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: cssVarColor('border'),
         color: cssVarColor('primaryText'),
       };
     case 'primary':
     default:
       return {
         backgroundColor: cssVarColor('primary'),
-        border: 'none',
+        borderWidth: 0,
+        borderStyle: 'solid',
+        borderColor: 'transparent',
         color: '#fffaf3',
       };
   }
@@ -44,7 +50,9 @@ export function buttonBaseStyle(): CSSProperties {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    border: 'none',
+    borderWidth: 0,
+    borderStyle: 'solid',
+    borderColor: 'transparent',
     outline: 'none',
     cursor: 'pointer',
     fontFamily: cssVarFont('ui'),

@@ -7,6 +7,7 @@ import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import { useAuth } from '../../../../lib/auth/context';
 import { CenteredCardComponent } from './centered-card';
+import { OrganizerRequestsSectionComponent } from './organizer-requests';
 import { UsersSectionComponent } from './users-section';
 import { useAdminData } from './use-admin-data';
 
@@ -18,8 +19,10 @@ export function AdminComponent() {
     loading,
     pageError,
     users,
+    organizerRequests,
     setPageError,
     changeUserRole,
+    reviewOrganizerRequest,
   } = useAdminData(Boolean(currentUser && currentUser.role === 'ADMIN'));
 
   if (!isAuthResolved) {
@@ -83,6 +86,11 @@ export function AdminComponent() {
           <Text as="span">{t('loading')}</Text>
         ) : (
           <Box direction="column" gap={20}>
+            <OrganizerRequestsSectionComponent
+              users={organizerRequests}
+              onReview={reviewOrganizerRequest}
+              onError={setPageError}
+            />
             <UsersSectionComponent
               users={users}
               onChangeRole={changeUserRole}

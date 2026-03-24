@@ -23,15 +23,6 @@ type KratosFlow = {
 
 type FlowType = 'login' | 'registration' | 'verification';
 
-type CurrentUser = {
-  id: string;
-  email: string;
-  isVerified: boolean;
-  firstName?: string | null;
-  lastName?: string | null;
-  role?: string;
-};
-
 const DEFAULT_KRATOS_PUBLIC_URL = 'http://localhost:4433';
 const DEFAULT_API_URL = 'http://localhost:4000';
 
@@ -182,7 +173,7 @@ export async function syncCurrentUser() {
   return response.json();
 }
 
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export async function getCurrentUser(): Promise<AuthUser> {
   const response = await fetch(`${getApiUrl()}/auth/me`, {
     method: 'GET',
     cache: 'no-store',
@@ -200,7 +191,112 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     throw new Error('Не удалось получить текущего пользователя');
   }
 
-  return response.json() as Promise<CurrentUser>;
+  return response.json() as Promise<AuthUser>;
+}
+
+export async function updateCurrentUserProfile(payload: {
+  firstName: string;
+  lastName: string;
+  age: number | null;
+  city: string;
+  headline: string;
+  school: string;
+  telegram: string;
+  githubUrl: string;
+  behanceUrl: string;
+  vkUrl: string;
+  avatarUrl: string;
+  portfolioSummary: string;
+}) {
+  const response = await fetch(`${getApiUrl()}/auth/me`, {
+    method: 'PATCH',
+    cache: 'no-store',
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const message =
+      data && typeof data === 'object' && 'message' in data
+        ? String(data.message)
+        : 'Не удалось сохранить профиль';
+
+    throw new Error(message);
+  }
+
+  return data as NonNullable<AuthUser>;
+}
+
+export async function requestOrganizerAccess(payload: {
+  organizationName: string;
+  bio: string;
+  websiteUrl: string;
+  telegram: string;
+  vkUrl: string;
+  logoUrl: string;
+}) {
+  const response = await fetch(`${getApiUrl()}/organizers/request`, {
+    method: 'POST',
+    cache: 'no-store',
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const message =
+      data && typeof data === 'object' && 'message' in data
+        ? String(data.message)
+        : 'Не удалось отправить заявку организатора';
+
+    throw new Error(message);
+  }
+
+  return data;
+}
+
+export async function updateOrganizerProfile(payload: {
+  organizationName: string;
+  bio: string;
+  websiteUrl: string;
+  telegram: string;
+  vkUrl: string;
+  logoUrl: string;
+}) {
+  const response = await fetch(`${getApiUrl()}/organizers/me`, {
+    method: 'PATCH',
+    cache: 'no-store',
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const message =
+      data && typeof data === 'object' && 'message' in data
+        ? String(data.message)
+        : 'Не удалось сохранить данные организации';
+
+    throw new Error(message);
+  }
+
+  return data as NonNullable<AuthUser>;
 }
 
 export async function submitVerificationFlow(params: {
@@ -295,3 +391,4 @@ function resolveKratosError(payload: unknown) {
 
   return null;
 }
+import type { AuthUser } from '../auth/types';

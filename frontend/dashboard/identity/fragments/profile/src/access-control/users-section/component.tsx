@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@ui/button';
 import { Box } from '@ui/layout';
@@ -27,6 +28,7 @@ export function UsersSectionComponent({
   onError,
 }: UsersSectionProps) {
   const t = useTranslations('Admin');
+  const router = useRouter();
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
 
   return (
@@ -53,6 +55,20 @@ export function UsersSectionComponent({
             <Text as="span" color="secondaryText">
               {t('users.currentRole')}: {user.role ?? 'PARTICIPANT'}
             </Text>
+            <Box gap={8} wrap="wrap">
+              <Button
+                label="Профиль"
+                variant="secondary"
+                font="headerNav"
+                onClick={() =>
+                  router.push(
+                    user.role === 'ORGANIZER'
+                      ? `/organizations/${user.id}`
+                      : `/members/${user.id}`,
+                  )
+                }
+              />
+            </Box>
             <Box gap={8} wrap="wrap">
               {AVAILABLE_ROLES.map((role) => (
                 <Button

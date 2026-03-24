@@ -2,7 +2,8 @@
 
 import {NextIntlClientProvider} from 'next-intl';
 import type {PropsWithChildren} from 'react';
-import {AuthProvider, type AuthUser} from '../lib/auth/context';
+import {AuthProvider} from '../lib/auth/context';
+import type {AuthUser} from '../lib/auth/types';
 
 type AppProvidersProps = PropsWithChildren<{
   locale: string;

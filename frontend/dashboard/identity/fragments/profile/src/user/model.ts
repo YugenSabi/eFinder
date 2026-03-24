@@ -1,4 +1,9 @@
-import type { AuthUser } from '../../../../lib/auth/context';
+import type {
+  AuthUser,
+  ProfileAchievement,
+  ProfileRatingRow,
+  ProfileStat,
+} from '../../../../lib/auth/types';
 
 export type RatingRow = {
   place: number;
@@ -10,7 +15,7 @@ export type RatingRow = {
 export type AchievementRow = {
   rank: number;
   title: string;
-  score: string;
+  score: number;
 };
 
 export type StatPoint = {
@@ -19,10 +24,12 @@ export type StatPoint = {
 };
 
 export type ProfileViewModel = {
+  avatarUrl?: string | null;
   firstName: string;
   lastName: string;
   fullName: string;
   roleLine: string;
+  description: string;
   personalInfo: string[];
   links: string[];
   reserveScore: number;
@@ -31,45 +38,56 @@ export type ProfileViewModel = {
   stats: StatPoint[];
 };
 
-export function buildMockProfile(
+export function buildProfileViewModel(
   currentUser: NonNullable<AuthUser>,
 ): ProfileViewModel {
-  const firstName = currentUser.firstName ?? 'Алексей';
-  const lastName = currentUser.lastName ?? 'Несатый';
+  const firstName = currentUser.firstName ?? '';
+  const lastName = currentUser.lastName ?? '';
   const fullName = `${firstName} ${lastName}`.trim();
+  const achievements = (currentUser.achievements ?? []).map(
+    (item: ProfileAchievement) => ({
+      rank: item.rank,
+      title: item.title,
+      score: item.score,
+    }),
+  );
+  const rating = (currentUser.rating ?? []).map((item: ProfileRatingRow) => ({
+    place: item.place,
+    name: item.name,
+    score: item.score,
+    highlight: item.highlight,
+  }));
+  const stats = (currentUser.stats ?? []).map((item: ProfileStat) => ({
+    label: item.label,
+    value: item.value,
+  }));
+  const personalInfo = [
+    currentUser.age !== null && currentUser.age !== undefined
+      ? `${currentUser.age} лет`
+      : null,
+    currentUser.school ?? null,
+    currentUser.email,
+    currentUser.city ?? null,
+  ].filter(Boolean) as string[];
+  const links = [
+    currentUser.telegram ? `Telegram: ${currentUser.telegram}` : null,
+    currentUser.githubUrl ? `Github: ${currentUser.githubUrl}` : null,
+    currentUser.behanceUrl ? `Behance: ${currentUser.behanceUrl}` : null,
+    currentUser.vkUrl ? `VK: ${currentUser.vkUrl}` : null,
+  ].filter(Boolean) as string[];
 
   return {
+    avatarUrl: currentUser.avatarUrl ?? null,
     firstName,
     lastName,
-    fullName,
-    roleLine:
-      'IT 10 y.o. talent / C++ reverse engineer. Google, Microsoft, JetBrains worker',
-    personalInfo: ['10 лет', 'Школа N998', currentUser.email, 'Москва'],
-    links: [
-      'Github: linus',
-      'Telegram: @pavelDurob',
-      'Behance: /efinder',
-      'VK: vk.com/efinder',
-    ],
-    reserveScore: 104,
-    rating: [
-      { place: 6, name: 'Василий Беляев', score: 865 },
-      { place: 7, name: fullName, score: 834 },
-      { place: 8, name: 'Егор Лебедев', score: 803 },
-    ],
-    achievements: [
-      { rank: 1, title: 'Хакатон Кибер Рывок', score: '+122' },
-      { rank: 2, title: 'Олимпиада по анализу данных', score: '+118' },
-      { rank: 3, title: 'Городской кейс-чемпионат', score: '+96' },
-      { rank: 4, title: 'IT Sprint: Security Track', score: '+122' },
-      { rank: 5, title: 'Архитектурный интенсив', score: '+77' },
-    ],
-    stats: [
-      { label: 'IT', value: 82 },
-      { label: 'Media', value: 54 },
-      { label: 'Social', value: 68 },
-      { label: 'Edu', value: 94 },
-      { label: 'Vol', value: 72 },
-    ],
+    fullName: fullName || currentUser.email,
+    roleLine: currentUser.headline ?? '',
+    description: currentUser.participantProfile?.portfolioSummary ?? '',
+    personalInfo,
+    links,
+    reserveScore: currentUser.participantProfile?.reserveForecastScore ?? 0,
+    rating,
+    achievements,
+    stats,
   };
 }

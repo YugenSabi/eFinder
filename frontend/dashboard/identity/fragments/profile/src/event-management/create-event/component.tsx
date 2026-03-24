@@ -10,6 +10,7 @@ import { DIRECTIONS, DIFFICULTIES } from '../constants';
 import { createEvent } from '../api';
 import { ChoiceGroupComponent } from '../choice-group';
 import type { EventFormPayload, OrganizerUser } from '../types';
+import { uploadImage } from '../../../../../lib/uploads/client';
 
 type CreateEventSectionProps = {
   organizers: OrganizerUser[];
@@ -26,6 +27,7 @@ const INITIAL_FORM: EventFormPayload = {
   basePoints: '10',
   rewardSummary: '',
   organizerId: '',
+  imageUrl: '',
 };
 
 export function CreateEventSectionComponent({
@@ -65,61 +67,93 @@ export function CreateEventSectionComponent({
         <Input
           label={t('createEvent.fields.title')}
           value={eventForm.title}
-          onChange={(event) =>
-            setEventForm((current) => ({ ...current, title: event.currentTarget.value }))
-          }
+          onChange={(event) => {
+            const { value } = event.currentTarget;
+            setEventForm((current) => ({ ...current, title: value }));
+          }}
         />
         <Input
           label={t('createEvent.fields.description')}
           value={eventForm.description}
-          onChange={(event) =>
+          onChange={(event) => {
+            const { value } = event.currentTarget;
             setEventForm((current) => ({
               ...current,
-              description: event.currentTarget.value,
-            }))
-          }
+              description: value,
+            }));
+          }}
         />
         <Input
           label={t('createEvent.fields.city')}
           value={eventForm.city}
-          onChange={(event) =>
-            setEventForm((current) => ({ ...current, city: event.currentTarget.value }))
-          }
+          onChange={(event) => {
+            const { value } = event.currentTarget;
+            setEventForm((current) => ({ ...current, city: value }));
+          }}
         />
         <Input
           label={t('createEvent.fields.startsAt')}
           type="datetime-local"
           value={eventForm.startsAt}
-          onChange={(event) =>
-            setEventForm((current) => ({ ...current, startsAt: event.currentTarget.value }))
-          }
+          onChange={(event) => {
+            const { value } = event.currentTarget;
+            setEventForm((current) => ({ ...current, startsAt: value }));
+          }}
         />
         <Input
           label={t('createEvent.fields.endsAt')}
           type="datetime-local"
           value={eventForm.endsAt}
-          onChange={(event) =>
-            setEventForm((current) => ({ ...current, endsAt: event.currentTarget.value }))
-          }
+          onChange={(event) => {
+            const { value } = event.currentTarget;
+            setEventForm((current) => ({ ...current, endsAt: value }));
+          }}
         />
         <Input
           label={t('createEvent.fields.basePoints')}
           type="number"
           value={eventForm.basePoints}
-          onChange={(event) =>
-            setEventForm((current) => ({ ...current, basePoints: event.currentTarget.value }))
-          }
+          onChange={(event) => {
+            const { value } = event.currentTarget;
+            setEventForm((current) => ({ ...current, basePoints: value }));
+          }}
         />
         <Input
           label={t('createEvent.fields.rewardSummary')}
           value={eventForm.rewardSummary}
-          onChange={(event) =>
+          onChange={(event) => {
+            const { value } = event.currentTarget;
             setEventForm((current) => ({
               ...current,
-              rewardSummary: event.currentTarget.value,
-            }))
-          }
+              rewardSummary: value,
+            }));
+          }}
         />
+        <Box direction="column" gap={8}>
+          <Text as="span" color="secondaryText" fontSize={14}>
+            Изображение мероприятия
+          </Text>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={async (event) => {
+              const file = event.currentTarget.files?.[0];
+
+              if (!file) {
+                return;
+              }
+
+              try {
+                const imageUrl = await uploadImage(file);
+                setEventForm((current) => ({ ...current, imageUrl }));
+              } catch (error) {
+                setEventMessage(
+                  error instanceof Error ? error.message : t('createEvent.error'),
+                );
+              }
+            }}
+          />
+        </Box>
         <ChoiceGroupComponent
           label={t('createEvent.fields.direction')}
           value={eventForm.direction}

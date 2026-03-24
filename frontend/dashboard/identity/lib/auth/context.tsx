@@ -8,15 +8,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import {getCurrentUser} from '../kratos';
-
-export type AuthUser = {
-  id: string;
-  email: string;
-  isVerified: boolean;
-  firstName?: string | null;
-  lastName?: string | null;
-  role?: string;
-} | null;
+import type {AuthUser} from './types';
 
 type AuthContextValue = {
   currentUser: AuthUser;

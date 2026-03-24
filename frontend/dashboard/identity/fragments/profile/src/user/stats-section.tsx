@@ -100,9 +100,15 @@ export function ProfileStatsSection({ stats }: { stats: StatPoint[] }) {
           boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)',
         }}
       >
-        <Box width="$full" style={{ maxWidth: 355, aspectRatio: '1 / 1' }}>
-          <RadarChart points={stats} />
-        </Box>
+        {stats.length === 0 ? (
+          <Text font="footerText" fontSize={15}>
+            Пока нет данных по направлениям
+          </Text>
+        ) : (
+          <Box width="$full" style={{ maxWidth: 355, aspectRatio: '1 / 1' }}>
+            <RadarChart points={stats} />
+          </Box>
+        )}
       </Box>
     </Box>
   );

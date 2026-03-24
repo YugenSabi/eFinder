@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   getAdminPageData,
+  updateOrganizerRequest,
   updateUserRole,
 } from './api';
 import type { AdminUser } from './types';
@@ -11,6 +12,7 @@ export function useAdminData(enabled: boolean) {
   const [loading, setLoading] = useState(enabled);
   const [pageError, setPageError] = useState<string | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
+  const [organizerRequests, setOrganizerRequests] = useState<AdminUser[]>([]);
 
   const load = useCallback(async () => {
     if (!enabled) {
@@ -24,6 +26,7 @@ export function useAdminData(enabled: boolean) {
     try {
       const data = await getAdminPageData();
       setUsers(data.users);
+      setOrganizerRequests(data.organizerRequests);
     } catch (error) {
       setPageError(error instanceof Error ? error.message : 'Request failed');
     } finally {
@@ -54,8 +57,22 @@ export function useAdminData(enabled: boolean) {
     loading,
     pageError,
     users: usersSorted,
+    organizerRequests,
     setPageError,
     load,
     changeUserRole,
+    reviewOrganizerRequest: useCallback(async (userId: string, status: string) => {
+      await updateOrganizerRequest(userId, status);
+      setOrganizerRequests((current) =>
+        current.filter((user) => user.id !== userId),
+      );
+      setUsers((current) =>
+        current.map((user) =>
+          user.id === userId
+            ? { ...user, role: status === 'APPROVED' ? 'ORGANIZER' : 'PARTICIPANT' }
+            : user,
+        ),
+      );
+    }, []),
   };
 }

@@ -1,6 +1,7 @@
+import { useRouter } from 'next/navigation';
 import { Box } from '@ui/layout';
+import { Button } from '@ui/button';
 import { Text } from '@ui/text';
-import { EventCardButton } from './button';
 import { EventCardTags } from './tags';
 
 export type EventCardModel = {
@@ -17,6 +18,8 @@ type CardComponentProps = {
 };
 
 export function CardComponent({ event }: CardComponentProps) {
+  const router = useRouter();
+
   return (
     <Box gap={10} alignItems="flex-start" style={{ flexWrap: 'nowrap' }}>
       <Box
@@ -64,7 +67,14 @@ export function CardComponent({ event }: CardComponentProps) {
 
         <EventCardTags tags={event.tags} />
 
-        <EventCardButton />
+        <Button
+          label="Подробнее"
+          bg="contrastColor"
+          textColor="surface"
+          font="headerNav"
+          fontSize={11}
+          onClick={() => router.push(`/events/${event.id}`)}
+        />
       </Box>
     </Box>
   );

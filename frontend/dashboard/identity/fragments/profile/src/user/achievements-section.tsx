@@ -22,47 +22,53 @@ export function ProfileAchievementsSection({
         backgroundColor="cardBg"
         style={{ boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }}
       >
-        {achievements.map((item, index) => (
-          <Box
-            key={`${item.title}-${index}`}
-            alignItems="center"
-            justifyContent="space-between"
-            padding={12}
-            borderRadius={16}
-            backgroundColor="cardBg"
-            gap={12}
-          >
+        {achievements.length === 0 ? (
+          <Text font="footerText" fontSize={15}>
+            Пока нет подтвержденных достижений
+          </Text>
+        ) : (
+          achievements.map((item, index) => (
             <Box
-              width={42}
-              height={42}
-              justifyContent="center"
+              key={`${item.title}-${index}`}
               alignItems="center"
-              borderRadius={12}
-              backgroundColor="surface"
+              justifyContent="space-between"
+              padding={12}
+              borderRadius={16}
+              backgroundColor="cardBg"
+              gap={12}
             >
-              <Text font="headerNav" fontSize={16}>
-                {item.rank}
-              </Text>
+              <Box
+                width={42}
+                height={42}
+                justifyContent="center"
+                alignItems="center"
+                borderRadius={12}
+                backgroundColor="surface"
+              >
+                <Text font="headerNav" fontSize={16}>
+                  {item.rank}
+                </Text>
+              </Box>
+              <Box flexGrow={1} justifyContent="center" alignItems="center">
+                <Text font="headerNav" fontSize={16}>
+                  {item.title}
+                </Text>
+              </Box>
+              <Box
+                minWidth={70}
+                height={42}
+                justifyContent="center"
+                alignItems="center"
+                borderRadius={12}
+                backgroundColor="surface"
+              >
+                <Text font="headerNav" fontSize={16}>
+                  +{item.score}
+                </Text>
+              </Box>
             </Box>
-            <Box flexGrow={1} justifyContent="center" alignItems="center">
-              <Text font="headerNav" fontSize={16}>
-                {item.title}
-              </Text>
-            </Box>
-            <Box
-              minWidth={70}
-              height={42}
-              justifyContent="center"
-              alignItems="center"
-              borderRadius={12}
-              backgroundColor="surface"
-            >
-              <Text font="headerNav" fontSize={16}>
-                {item.score}
-              </Text>
-            </Box>
-          </Box>
-        ))}
+          ))
+        )}
       </Box>
     </Box>
   );

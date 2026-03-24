@@ -5,18 +5,22 @@ import {
   getBrowserFlow,
   getCsrfToken,
   getVerificationConfirmPath,
+  requestOrganizerAccess,
   startBrowserFlow,
   submitRegistrationFlow,
   syncCurrentUser,
 } from '../../../lib/kratos';
 import { useAuth } from '../../../lib/auth/context';
 import { MainLayoutComponent } from '@identity/main-layout';
+import { Button } from '@ui/button';
+import { Input } from '@ui/input';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
+import { uploadImage } from '../../../lib/uploads/client';
 import { RegisterSchema, type TypeRegisterSchema } from '../schemas';
 import { CtaComponent } from './cta';
 import { EmailInputComponent } from './email-input';
@@ -41,10 +45,17 @@ export function RegistrationComponent() {
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: '',
+      accountType: 'participant',
       firstName: '',
       lastName: '',
       password: '',
       repeatPassword: '',
+      organizationName: '',
+      organizationBio: '',
+      organizationWebsite: '',
+      organizationTelegram: '',
+      organizationVk: '',
+      organizationLogoUrl: '',
     },
   });
 
@@ -99,7 +110,21 @@ export function RegistrationComponent() {
         password: data.password,
       });
       const currentUser = await syncCurrentUser();
-      setCurrentUser(currentUser);
+
+      if (data.accountType === 'organizer') {
+        await requestOrganizerAccess({
+          organizationName: data.organizationName ?? '',
+          bio: data.organizationBio ?? '',
+          websiteUrl: data.organizationWebsite ?? '',
+          telegram: data.organizationTelegram ?? '',
+          vkUrl: data.organizationVk ?? '',
+          logoUrl: data.organizationLogoUrl ?? '',
+        });
+        const organizerUser = await syncCurrentUser();
+        setCurrentUser(organizerUser);
+      } else {
+        setCurrentUser(currentUser);
+      }
       router.push(getVerificationConfirmPath(registrationResult) ?? '/auth/confirm');
       router.refresh();
     } catch (error) {
@@ -130,9 +155,85 @@ export function RegistrationComponent() {
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <TitleComponent />
+          <Box gap={8} wrap="wrap">
+            <Button
+              label={t('accountType.participant')}
+              variant={form.watch('accountType') === 'participant' ? 'primary' : 'secondary'}
+              font="headerNav"
+              onClick={() => form.setValue('accountType', 'participant')}
+            />
+            <Button
+              label={t('accountType.organizer')}
+              variant={form.watch('accountType') === 'organizer' ? 'primary' : 'secondary'}
+              font="headerNav"
+              onClick={() => form.setValue('accountType', 'organizer')}
+            />
+          </Box>
           <EmailInputComponent register={form.register} errors={form.formState.errors} />
           <FirstNameInputComponent register={form.register} errors={form.formState.errors} />
           <LastNameInputComponent register={form.register} errors={form.formState.errors} />
+          {form.watch('accountType') === 'organizer' ? (
+            <Box direction="column" gap={12}>
+              <Input
+                label={t('organizer.organizationName.label')}
+                labelFont="headerNav"
+                font="headerNav"
+                error={Boolean(form.formState.errors.organizationName)}
+                {...form.register('organizationName')}
+              />
+              <Input
+                label={t('organizer.bio.label')}
+                labelFont="headerNav"
+                font="headerNav"
+                {...form.register('organizationBio')}
+              />
+              <Input
+                label={t('organizer.website.label')}
+                labelFont="headerNav"
+                font="headerNav"
+                {...form.register('organizationWebsite')}
+              />
+              <Input
+                label={t('organizer.telegram.label')}
+                labelFont="headerNav"
+                font="headerNav"
+                {...form.register('organizationTelegram')}
+              />
+              <Input
+                label={t('organizer.vk.label')}
+                labelFont="headerNav"
+                font="headerNav"
+                {...form.register('organizationVk')}
+              />
+              <Box direction="column" gap={8}>
+                <Text as="span" color="secondaryText" fontSize={14}>
+                  {t('organizer.logo.label')}
+                </Text>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (event) => {
+                    const file = event.currentTarget.files?.[0];
+
+                    if (!file) {
+                      return;
+                    }
+
+                    try {
+                      const logoUrl = await uploadImage(file);
+                      form.setValue('organizationLogoUrl', logoUrl, {
+                        shouldValidate: true,
+                      });
+                    } catch (error) {
+                      setSubmitError(
+                        error instanceof Error ? error.message : t('errorDefault'),
+                      );
+                    }
+                  }}
+                />
+              </Box>
+            </Box>
+          ) : null}
           <PasswordInputComponent register={form.register} errors={form.formState.errors} />
           <RepeatPasswordInputComponent
             register={form.register}

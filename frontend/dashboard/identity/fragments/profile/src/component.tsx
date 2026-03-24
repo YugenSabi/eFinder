@@ -9,8 +9,6 @@ import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import { useAuth } from '../../../lib/auth/context';
 import { logoutCurrentUser } from '../../../lib/kratos';
-import { AdminProfileComponent } from './admin/component';
-import { ObserverProfileComponent } from './observer/component';
 import { OrganizerProfileComponent } from './organizer/component';
 import { UserProfileComponent } from './user/component';
 
@@ -87,24 +85,40 @@ export function ProfileComponent() {
     );
   }
 
+  const shouldShowOrganizerProfile =
+    currentUser.role === 'ORGANIZER' ||
+    (
+      currentUser.role === 'PARTICIPANT' &&
+      Boolean(currentUser.organizerProfile)
+    );
+
   return (
     <MainLayoutComponent>
-      {currentUser.role === 'ADMIN' ? (
-        <AdminProfileComponent loggingOut={loggingOut} onLogout={logout} />
-      ) : null}
-      {currentUser.role === 'ORGANIZER' ? (
+      {shouldShowOrganizerProfile ? (
         <OrganizerProfileComponent loggingOut={loggingOut} onLogout={logout} />
       ) : null}
-      {currentUser.role === 'OBSERVER' ? (
-        <ObserverProfileComponent loggingOut={loggingOut} onLogout={logout} />
-      ) : null}
-      {(!currentUser.role || currentUser.role === 'PARTICIPANT') ? (
+      {!shouldShowOrganizerProfile ? (
         <UserProfileComponent
           currentUser={currentUser}
           logoutLabel={t('logout')}
           logoutLoadingLabel={t('logoutLoading')}
           loggingOut={loggingOut}
           onLogout={logout}
+          onProfileUpdated={setCurrentUser}
+          actionLabel={
+            currentUser.role === 'ADMIN'
+              ? t('actions.accessControl')
+              : currentUser.role === 'OBSERVER'
+                ? t('actions.reserveInspector')
+                : undefined
+          }
+          onAction={
+            currentUser.role === 'ADMIN'
+              ? () => router.push('/profile/access-control')
+              : currentUser.role === 'OBSERVER'
+                ? () => router.push('/profile/reserve-inspector')
+                : undefined
+          }
         />
       ) : null}
     </MainLayoutComponent>

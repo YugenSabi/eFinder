@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { MainLayoutComponent } from '@identity/main-layout';
@@ -8,11 +9,27 @@ import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import { useAuth } from '../../../../lib/auth/context';
 import { CreateEventSectionComponent } from './create-event';
+import { getPendingParticipations, reviewParticipation } from './api';
+import type { PendingParticipation } from './types';
 
 export function OrganizerDashboardComponent() {
   const t = useTranslations('OrganizerDashboard');
   const router = useRouter();
   const { currentUser, isAuthResolved } = useAuth();
+  const [pendingParticipations, setPendingParticipations] = useState<PendingParticipation[]>([]);
+
+  useEffect(() => {
+    if (
+      currentUser?.role !== 'ORGANIZER' ||
+      currentUser.organizerProfile?.status !== 'APPROVED'
+    ) {
+      return;
+    }
+
+    getPendingParticipations()
+      .then(setPendingParticipations)
+      .catch(() => setPendingParticipations([]));
+  }, [currentUser]);
 
   if (!isAuthResolved) {
     return (
@@ -45,7 +62,10 @@ export function OrganizerDashboardComponent() {
     );
   }
 
-  if (currentUser.role !== 'ORGANIZER') {
+  if (
+    currentUser.role !== 'ORGANIZER' ||
+    currentUser.organizerProfile?.status !== 'APPROVED'
+  ) {
     return (
       <MainLayoutComponent>
         <Box as="main" width="$full" justifyContent="center" alignItems="center" paddingTop={48} paddingBottom={48}>
@@ -88,6 +108,64 @@ export function OrganizerDashboardComponent() {
             },
           ]}
         />
+        <Box direction="column" gap={16} padding={24} surface="card">
+          <Text as="h2" font="headerNav" fontSize={24}>
+            Заявки на участие
+          </Text>
+          {pendingParticipations.length === 0 ? (
+            <Text as="span">Пока нет новых заявок</Text>
+          ) : (
+            pendingParticipations.map((participation) => (
+              <Box
+                key={participation.id}
+                direction="column"
+                gap={10}
+                padding={16}
+                border="1px solid #e8d7c0"
+                borderRadius={18}
+              >
+                <Text as="span" font="headerNav" fontSize={18}>
+                  {participation.event.title}
+                </Text>
+                <Text as="span">
+                  {[participation.participant.firstName, participation.participant.lastName]
+                    .filter(Boolean)
+                    .join(' ') || participation.participant.email}
+                </Text>
+                <Box gap={8}>
+                  <Button
+                    label="Профиль участника"
+                    variant="secondary"
+                    font="headerNav"
+                    onClick={() => router.push(`/members/${participation.participant.id}`)}
+                  />
+                  <Button
+                    label="Подтвердить"
+                    bg="contrastColor"
+                    font="headerNav"
+                    onClick={async () => {
+                      await reviewParticipation(participation.id, 'VERIFIED');
+                      setPendingParticipations((current) =>
+                        current.filter((item) => item.id !== participation.id),
+                      );
+                    }}
+                  />
+                  <Button
+                    label="Отклонить"
+                    variant="secondary"
+                    font="headerNav"
+                    onClick={async () => {
+                      await reviewParticipation(participation.id, 'REJECTED');
+                      setPendingParticipations((current) =>
+                        current.filter((item) => item.id !== participation.id),
+                      );
+                    }}
+                  />
+                </Box>
+              </Box>
+            ))
+          )}
+        </Box>
       </Box>
     </MainLayoutComponent>
   );

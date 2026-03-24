@@ -28,10 +28,14 @@ async function apiFetch<T>(path: string, init?: RequestInit) {
 }
 
 export async function getAdminPageData(): Promise<AdminPageData> {
-  const users = await apiFetch<AdminUser[]>('/users');
+  const [users, organizerRequests] = await Promise.all([
+    apiFetch<AdminUser[]>('/users'),
+    apiFetch<AdminUser[]>('/organizers/candidates'),
+  ]);
 
   return {
     users,
+    organizerRequests,
   };
 }
 
@@ -40,6 +44,15 @@ export function updateUserRole(userId: string, role: string) {
     method: 'PATCH',
     body: JSON.stringify({
       role,
+    }),
+  });
+}
+
+export function updateOrganizerRequest(userId: string, status: string) {
+  return apiFetch(`/organizers/${userId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      status,
     }),
   });
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@ui/button';
 import { Box } from '@ui/layout';
@@ -28,6 +29,7 @@ export function ObserverParticipantCard({
   onToggleFavorite,
 }: ObserverParticipantCardProps) {
   const t = useTranslations('Observer');
+  const router = useRouter();
 
   return (
     <Box key={participant.id} direction="column" gap={8} padding={18} surface="card">
@@ -56,19 +58,27 @@ export function ObserverParticipantCard({
       <Text as="span" color="secondaryText">
         {t('card.totalScore')}: {participant.totalScore}
       </Text>
-      <Button
-        label={
-          loading
-            ? t('card.updatingFavorite')
-            : participant.isFavorite
-              ? t('card.removeFavorite')
-              : t('card.addFavorite')
-        }
-        variant={participant.isFavorite ? 'primary' : 'secondary'}
-        font="headerNav"
-        disabled={loading}
-        onClick={() => onToggleFavorite(participant)}
-      />
+      <Box gap={8} wrap="wrap">
+        <Button
+          label="Профиль"
+          variant="secondary"
+          font="headerNav"
+          onClick={() => router.push(`/members/${participant.id}`)}
+        />
+        <Button
+          label={
+            loading
+              ? t('card.updatingFavorite')
+              : participant.isFavorite
+                ? t('card.removeFavorite')
+                : t('card.addFavorite')
+          }
+          variant={participant.isFavorite ? 'primary' : 'secondary'}
+          font="headerNav"
+          disabled={loading}
+          onClick={() => onToggleFavorite(participant)}
+        />
+      </Box>
     </Box>
   );
 }

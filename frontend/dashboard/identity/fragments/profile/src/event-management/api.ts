@@ -1,4 +1,5 @@
 import type { EventFormPayload } from './types';
+import type { PendingParticipation } from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -41,6 +42,18 @@ export function createEvent(payload: EventFormPayload) {
       basePoints: Number(payload.basePoints),
       rewardSummary: payload.rewardSummary || undefined,
       organizerId: payload.organizerId || undefined,
+      imageUrl: payload.imageUrl || undefined,
     }),
+  });
+}
+
+export function getPendingParticipations() {
+  return apiFetch<PendingParticipation[]>('/participations/organizer/pending');
+}
+
+export function reviewParticipation(participationId: string, status: string) {
+  return apiFetch(`/participations/${participationId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
   });
 }

@@ -1,13 +1,5 @@
 import {cookies} from 'next/headers';
-
-type CurrentUser = {
-  id: string;
-  email: string;
-  isVerified: boolean;
-  firstName?: string | null;
-  lastName?: string | null;
-  role?: string;
-};
+import type { AuthUser } from '../auth/types';
 
 const DEFAULT_API_URL = 'http://localhost:4000';
 const DEFAULT_KRATOS_PUBLIC_URL = 'http://localhost:4433';
@@ -20,7 +12,7 @@ function getKratosPublicUrl() {
   return process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL ?? DEFAULT_KRATOS_PUBLIC_URL;
 }
 
-export async function getServerCurrentUser(): Promise<CurrentUser | null> {
+export async function getServerCurrentUser(): Promise<AuthUser> {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
 
@@ -41,7 +33,7 @@ export async function getServerCurrentUser(): Promise<CurrentUser | null> {
     return null;
   }
 
-  return response.json() as Promise<CurrentUser>;
+  return response.json() as Promise<AuthUser>;
 }
 
 export function getBrowserFlowRedirectUrl(
