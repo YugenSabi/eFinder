@@ -456,6 +456,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@identity/event-details@workspace:dashboard/identity/fragments/event-details":
+  version: 0.0.0-use.local
+  resolution: "@identity/event-details@workspace:dashboard/identity/fragments/event-details"
+  dependencies:
+    "@identity/main-layout": "npm:*"
+    "@ui/button": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next: "npm:^16.2.1"
+    next-intl: "npm:^4.0.0"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
 "@identity/events@npm:*, @identity/events@workspace:dashboard/identity/fragments/events":
   version: 0.0.0-use.local
   resolution: "@identity/events@workspace:dashboard/identity/fragments/events"
@@ -524,16 +539,48 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@identity/profile@workspace:dashboard/identity/fragments/profile":
+"@identity/organization-profile@workspace:dashboard/identity/fragments/organization-profile":
   version: 0.0.0-use.local
-  resolution: "@identity/profile@workspace:dashboard/identity/fragments/profile"
+  resolution: "@identity/organization-profile@workspace:dashboard/identity/fragments/organization-profile"
   dependencies:
     "@identity/main-layout": "npm:*"
     "@ui/button": "npm:*"
     "@ui/layout": "npm:*"
     "@ui/text": "npm:*"
+    next: "npm:^16.2.1"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@identity/profile@workspace:dashboard/identity/fragments/profile":
+  version: 0.0.0-use.local
+  resolution: "@identity/profile@workspace:dashboard/identity/fragments/profile"
+  dependencies:
+    "@hookform/resolvers": "npm:^3.10.0"
+    "@identity/main-layout": "npm:*"
+    "@ui/button": "npm:*"
+    "@ui/input": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
     next: "npm:*"
     next-intl: "npm:*"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+    react-hook-form: "npm:^7.54.2"
+    zod: "npm:^3.24.2"
+  languageName: unknown
+  linkType: soft
+
+"@identity/public-profile@workspace:dashboard/identity/fragments/public-profile":
+  version: 0.0.0-use.local
+  resolution: "@identity/public-profile@workspace:dashboard/identity/fragments/public-profile"
+  dependencies:
+    "@identity/main-layout": "npm:*"
+    "@ui/button": "npm:*"
+    "@ui/layout": "npm:*"
+    "@ui/text": "npm:*"
+    next: "npm:^16.2.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
   languageName: unknown

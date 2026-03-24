@@ -3,21 +3,24 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Button } from '@ui/button';
+import { Input } from '@ui/input';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import { Button } from '@ui/button';
 import { useAuth } from '../../../../lib/auth/context';
-import { Input } from '@ui/input';
-import { uploadImage } from '../../../../lib/uploads/client';
 import { updateOrganizerProfile } from '../../../../lib/kratos';
+import { uploadImage } from '../../../../lib/uploads/client';
 
 type OrganizerProfileComponentProps = {
-  currentUser: NonNullable<AuthUser>;
+  loggingOut: boolean;
+  onLogout: () => void | Promise<void>;
 };
 
 export function OrganizerProfileComponent({
-  currentUser,
+  loggingOut,
+  onLogout,
 }: OrganizerProfileComponentProps) {
+  const t = useTranslations('Auth.profile');
   const router = useRouter();
   const { currentUser, setCurrentUser } = useAuth();
   const [saving, setSaving] = useState(false);
@@ -81,9 +84,11 @@ export function OrganizerProfileComponent({
             />
           </Box>
         ) : null}
+
         <Text as="span" font="headerNav" fontSize={20}>
           {t('organizer.about')}
         </Text>
+
         <Input
           label="Название организации"
           value={form.organizationName}
@@ -104,6 +109,7 @@ export function OrganizerProfileComponent({
             }))
           }
         />
+
         <Text as="span">
           {t('organizer.rating')}: {organizerProfile.trustScore}
         </Text>
@@ -111,9 +117,9 @@ export function OrganizerProfileComponent({
           {t('organizer.totalEvents')}: {organizerProfile.totalEvents}
         </Text>
         <Text as="span">
-          {t('organizer.rank')}:{' '}
-          {organizerProfile.organizationRank ?? t('organizer.noRank')}
+          {t('organizer.rank')}: {organizerProfile.organizationRank ?? t('organizer.noRank')}
         </Text>
+
         <Box direction="column" gap={6}>
           <Text as="span" font="headerNav" fontSize={18}>
             {t('organizer.links')}
@@ -149,6 +155,7 @@ export function OrganizerProfileComponent({
             }
           />
         </Box>
+
         <Box direction="column" gap={8}>
           <Text as="span" font="headerNav" fontSize={18}>
             Логотип
@@ -168,14 +175,13 @@ export function OrganizerProfileComponent({
                 setForm((current) => ({ ...current, logoUrl }));
               } catch (error) {
                 setSaveError(
-                  error instanceof Error
-                    ? error.message
-                    : 'Не удалось загрузить логотип',
+                  error instanceof Error ? error.message : 'Не удалось загрузить логотип',
                 );
               }
             }}
           />
         </Box>
+
         <Box direction="column" gap={6}>
           <Text as="span" font="headerNav" fontSize={18}>
             {t('organizer.rewards')}
@@ -190,6 +196,7 @@ export function OrganizerProfileComponent({
             <Text as="span">{t('organizer.noRewards')}</Text>
           )}
         </Box>
+
         <Box direction="column" gap={6}>
           <Text as="span" font="headerNav" fontSize={18}>
             {t('organizer.recentEvents')}
@@ -208,6 +215,7 @@ export function OrganizerProfileComponent({
             <Text as="span">{t('organizer.noEvents')}</Text>
           )}
         </Box>
+
         {organizerProfile.status === 'APPROVED' ? (
           <Button
             label={t('actions.eventManagement')}
@@ -216,12 +224,9 @@ export function OrganizerProfileComponent({
             onClick={() => router.push('/profile/event-management')}
           />
         ) : null}
+
         <Button
-          label={
-            saving
-              ? 'Сохраняем данные организации...'
-              : 'Сохранить данные организации'
-          }
+          label={saving ? 'Сохраняем данные организации...' : 'Сохранить данные организации'}
           bg="contrastColor"
           font="headerNav"
           disabled={saving}
@@ -233,20 +238,20 @@ export function OrganizerProfileComponent({
               setCurrentUser(updatedUser);
             } catch (error) {
               setSaveError(
-                error instanceof Error
-                  ? error.message
-                  : 'Не удалось сохранить организацию',
+                error instanceof Error ? error.message : 'Не удалось сохранить организацию',
               );
             } finally {
               setSaving(false);
             }
           }}
         />
+
         {saveError ? (
           <Text as="span" color="danger" fontSize={14}>
             {saveError}
           </Text>
         ) : null}
+
         <Button
           label={loggingOut ? t('logoutLoading') : t('logout')}
           variant="secondary"
