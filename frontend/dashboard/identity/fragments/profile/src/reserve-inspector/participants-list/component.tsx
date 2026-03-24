@@ -24,7 +24,7 @@ export function ObserverParticipantsListComponent({
       <Box
         padding={24}
         surface="card"
-        radius="xl"
+        borderRadius={24}
         style={{ boxShadow: '-3px 3px 10px rgba(0, 0, 0, 0.12)' }}
       >
         <Text as="span" color="secondaryText">

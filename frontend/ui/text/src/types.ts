@@ -1,4 +1,4 @@
-import type {ReactNode} from 'react';
+import type {CSSProperties, ReactNode} from 'react';
 import type {ColorValue, FontValue} from '@ui/theme';
 
 export type TextTone = 'body' | 'title' | 'subtitle' | 'eyebrow';
@@ -12,4 +12,5 @@ export type TextProps = {
   fontSize?: number;
   lineHeight?: number;
   letterSpacing?: number;
+  style?: CSSProperties;
 };

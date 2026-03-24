@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@ui/button';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
 import { ProfileActionsSection } from '../user/actions-section';
@@ -332,21 +333,15 @@ export function OrganizerProfileComponent({
                       {(event.city ?? 'Онлайн')} • {new Date(event.startsAt).toLocaleDateString('ru-RU')}
                     </Text>
                     <Box alignItems="flex-start">
-                      <Box
-                        as="button"
-                        type="button"
+                      <Button
+                        label="Подробнее"
                         onClick={() => router.push(`/events/${event.id}`)}
-                        height={28}
-                        borderRadius={12}
-                        backgroundColor="contrastColor"
-                        justifyContent="center"
-                        alignItems="center"
-                        style={{ border: 'none', cursor: 'pointer', padding: '0 10px' }}
-                      >
-                        <Text font="headerNav" fontSize={10} color="surface">
-                          Подробнее
-                        </Text>
-                      </Box>
+                        font="headerNav"
+                        fontSize={10}
+                        bg="contrastColor"
+                        textColor="surface"
+                        style={{ height: 28, padding: '0 10px' }}
+                      />
                     </Box>
                   </Box>
                 </Box>

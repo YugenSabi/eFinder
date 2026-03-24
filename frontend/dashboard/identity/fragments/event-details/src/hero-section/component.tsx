@@ -98,9 +98,11 @@ export function EventHeroSectionComponent({
             style={{width: '100%', height: '100%', objectFit: 'cover'}}
           />
         ) : (
-          <Text font="headerNav" fontSize={28} style={{textAlign: 'center', padding: '0 20px'}}>
-            {event.title}
-          </Text>
+          <Box paddingLeft={20} paddingRight={20} alignItems="center">
+            <Text font="headerNav" fontSize={28}>
+              {event.title}
+            </Text>
+          </Box>
         )}
       </Box>
 

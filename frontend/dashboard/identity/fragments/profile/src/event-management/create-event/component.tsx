@@ -309,7 +309,7 @@ export function CreateEventSectionComponent({
                     borderColor="contrastColor"
                     textColor={
                       organizer.id === eventForm.organizerId
-                        ? 'primaryBackground'
+                        ? 'surface'
                         : 'contrastColor'
                     }
                     onClick={() =>

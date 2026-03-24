@@ -79,7 +79,7 @@ export function ObserverComponent() {
           gap={8}
           padding={28}
           surface="card"
-          radius="xl"
+          borderRadius={24}
           style={{ boxShadow: '-3px 3px 10px rgba(0, 0, 0, 0.12)' }}
         >
           <Text as="h1" font="headerNav" fontSize={38}>
@@ -102,7 +102,7 @@ export function ObserverComponent() {
           <Box
             padding={24}
             surface="card"
-            radius="xl"
+            borderRadius={24}
             style={{ boxShadow: '-3px 3px 10px rgba(0, 0, 0, 0.12)' }}
           >
             <Text as="span">{t('loading')}</Text>

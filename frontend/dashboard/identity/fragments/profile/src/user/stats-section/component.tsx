@@ -1,6 +1,6 @@
 import {Box} from '@ui/layout';
 import {Text} from '@ui/text';
-import type {ProfileStat} from '../../../../lib/auth/types';
+import type {ProfileStat} from '../../../../../lib/auth/types';
 
 type StatPoint = {
   label: string;

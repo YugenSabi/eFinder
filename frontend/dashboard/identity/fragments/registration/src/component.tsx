@@ -162,7 +162,7 @@ export function RegistrationComponent() {
               borderColor="contrastColor"
               textColor={
                 form.watch('accountType') === 'participant'
-                  ? 'primaryBackground'
+                  ? 'surface'
                   : 'contrastColor'
               }
               onClick={() => form.setValue('accountType', 'participant')}
@@ -175,7 +175,7 @@ export function RegistrationComponent() {
               borderColor="contrastColor"
               textColor={
                 form.watch('accountType') === 'organizer'
-                  ? 'primaryBackground'
+                  ? 'surface'
                   : 'contrastColor'
               }
               onClick={() => form.setValue('accountType', 'organizer')}

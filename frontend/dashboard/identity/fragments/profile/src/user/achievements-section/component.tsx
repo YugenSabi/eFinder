@@ -1,6 +1,6 @@
 import {Box} from '@ui/layout';
 import {Text} from '@ui/text';
-import type {ProfileAchievement} from '../../../../lib/auth/types';
+import type {ProfileAchievement} from '../../../../../lib/auth/types';
 
 type ProfileAchievementsSectionProps = {
   achievements: ProfileAchievement[];

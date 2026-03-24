@@ -70,7 +70,7 @@ export function ObserverParticipantCard({
           <Text
             as="span"
             font={participant.isFavorite ? 'headerNav' : 'footerText'}
-            color={participant.isFavorite ? 'primaryBackground' : 'mainText'}
+            color={participant.isFavorite ? 'surface' : 'primaryText'}
           >
             {participant.isFavorite ? 'В избранном' : 'Не в избранном'}
           </Text>
@@ -158,7 +158,7 @@ export function ObserverParticipantCard({
           font="headerNav"
           bg={participant.isFavorite ? 'contrastColor' : undefined}
           borderColor="contrastColor"
-          textColor={participant.isFavorite ? 'primaryBackground' : 'contrastColor'}
+          textColor={participant.isFavorite ? 'surface' : 'contrastColor'}
           disabled={loading}
           onClick={() => onToggleFavorite(participant)}
         />

@@ -1,6 +1,5 @@
-import type { ReactNode } from 'react';
-import { HomeComponent } from '@identity/home';
+import {redirect} from 'next/navigation';
 
-export default function HomePage(): ReactNode {
-  return <HomeComponent />;
+export default function HomePage() {
+  redirect('/events');
 }

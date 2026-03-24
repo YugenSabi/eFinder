@@ -110,7 +110,7 @@ export function UsersSectionComponent({
                     font="headerNav"
                     bg={isCurrentRole ? 'contrastColor' : undefined}
                     borderColor="contrastColor"
-                    textColor={isCurrentRole ? 'primaryBackground' : 'contrastColor'}
+                    textColor={isCurrentRole ? 'surface' : 'contrastColor'}
                     style={{
                       padding: '10px 16px',
                     }}

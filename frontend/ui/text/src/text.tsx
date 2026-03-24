@@ -42,6 +42,7 @@ export function Text({
   fontSize,
   lineHeight,
   letterSpacing,
+  style,
 }: TextProps) {
   return (
     <Tag
@@ -52,6 +53,7 @@ export function Text({
         fontSize: fontSize ?? stylesByTone[tone].fontSize,
         lineHeight: lineHeight ?? stylesByTone[tone].lineHeight,
         letterSpacing: letterSpacing ?? stylesByTone[tone].letterSpacing,
+        ...style,
       }}
     >
       {children}
