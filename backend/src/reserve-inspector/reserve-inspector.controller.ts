@@ -1,13 +1,15 @@
 import {
   Controller,
+  Header,
   Get,
   Delete,
   Param,
   Post,
   Query,
   Req,
+  Res,
 } from '@nestjs/common';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { ListObserverParticipantsDto } from './dto/list-observer-participants.dto';
 import { ReserveInspectorService } from './reserve-inspector.service';
@@ -47,5 +49,26 @@ export class ReserveInspectorController {
     const currentUser = await this.authService.getAuthenticatedUser(request);
 
     return this.reserveInspectorService.removeFavorite(currentUser, participantId);
+  }
+
+  @Get('participants/:participantId/report')
+  @Header('Content-Type', 'application/pdf')
+  async downloadParticipantReport(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Param('participantId') participantId: string,
+  ) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+    const report = await this.reserveInspectorService.buildParticipantReportPdf(
+      currentUser,
+      participantId,
+    );
+
+    response.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${report.fileName}"`,
+    );
+
+    return report.buffer;
   }
 }

@@ -3,7 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import PDFDocument = require('pdfkit');
 import {
+  EventDirection,
   ParticipationStatus,
   UserRole,
   type User,
@@ -184,6 +186,127 @@ export class ReserveInspectorService {
     };
   }
 
+  async buildParticipantReportPdf(currentUser: User, participantId: string) {
+    this.assertObserver(currentUser);
+
+    const participant = await this.prismaService.user.findUnique({
+      where: {
+        id: participantId,
+      },
+      include: {
+        participantProfile: true,
+        participations: {
+          include: {
+            event: {
+              include: {
+                organizer: {
+                  include: {
+                    organizerProfile: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
+    });
+
+    if (!participant || participant.role !== UserRole.PARTICIPANT) {
+      throw new NotFoundException('Participant not found');
+    }
+
+    const verifiedParticipations = participant.participations.filter(
+      (participation) => participation.status === ParticipationStatus.VERIFIED,
+    );
+    const totalScore =
+      participant.participantProfile?.totalScore ??
+      verifiedParticipations.reduce(
+        (sum, participation) => sum + participation.scoreAwarded,
+        0,
+      );
+    const averageScore =
+      verifiedParticipations.length > 0
+        ? totalScore / verifiedParticipations.length
+        : 0;
+    const directionTotals = new Map<EventDirection, number>();
+
+    for (const direction of Object.values(EventDirection)) {
+      directionTotals.set(direction, 0);
+    }
+
+    for (const participation of verifiedParticipations) {
+      directionTotals.set(
+        participation.event.direction,
+        (directionTotals.get(participation.event.direction) ?? 0) +
+          participation.scoreAwarded,
+      );
+    }
+
+    const reportLines = [
+      'Participant report',
+      '',
+      `Generated at: ${this.formatDateTime(new Date())}`,
+      '',
+      'Profile',
+      `Name: ${this.buildDisplayName(participant)}`,
+      `Email: ${participant.email}`,
+      `City: ${participant.city ?? '-'}`,
+      `Age: ${participant.age ?? '-'}`,
+      `School: ${participant.school ?? '-'}`,
+      `Headline: ${participant.headline ?? '-'}`,
+      '',
+      'Summary',
+      `Role: ${participant.role}`,
+      `Verified account: ${participant.isVerified ? 'yes' : 'no'}`,
+      `Verified events: ${verifiedParticipations.length}`,
+      `All event applications: ${participant.participations.length}`,
+      `Total score: ${totalScore}`,
+      `Average score: ${averageScore.toFixed(2)}`,
+      `Current rank: ${participant.participantProfile?.currentRank ?? '-'}`,
+      `Reserve forecast score: ${
+        participant.participantProfile?.reserveForecastScore ?? 0
+      }`,
+      '',
+      'Scores by direction',
+      ...Object.values(EventDirection).map(
+        (direction) => `${direction}: ${directionTotals.get(direction) ?? 0}`,
+      ),
+      '',
+      'Event history',
+      ...(participant.participations.length > 0
+        ? participant.participations.flatMap((participation, index) => {
+            const organizerName =
+              participation.event.organizer.organizerProfile?.organizationName ??
+              this.buildDisplayName(participation.event.organizer);
+
+            return [
+              `${index + 1}. ${participation.event.title}`,
+              `   Status: ${participation.status}`,
+              `   Score awarded: ${participation.scoreAwarded}`,
+              `   Place: ${participation.place ?? '-'}`,
+              `   Direction: ${participation.event.direction}`,
+              `   City: ${participation.event.city ?? '-'}`,
+              `   Starts at: ${this.formatDateTime(participation.event.startsAt)}`,
+              `   Organizer: ${organizerName}`,
+              `   Comment: ${participation.organizerComment ?? '-'}`,
+            ];
+          })
+        : ['No event applications yet']),
+    ];
+
+    const participantNameForFile = this
+      .sanitizeAsciiFileName(this.buildDisplayName(participant))
+      .toLowerCase();
+
+    return {
+      fileName: `participant-report-${participantNameForFile || participant.id}.pdf`,
+      buffer: await this.buildPdfDocument(reportLines),
+    };
+  }
+
   private assertObserver(currentUser: User) {
     if (currentUser.role !== UserRole.OBSERVER) {
       throw new ForbiddenException('Only observer can access reserve inspector');
@@ -213,5 +336,77 @@ export class ReserveInspectorService {
     });
 
     return new Set(favorites.map((favorite) => favorite.participantId));
+  }
+
+  private buildDisplayName(
+    user: Pick<User, 'firstName' | 'lastName' | 'email'>,
+  ) {
+    return [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.email;
+  }
+
+  private formatDateTime(value: Date) {
+    return new Intl.DateTimeFormat('ru-RU', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'Europe/Moscow',
+    }).format(value);
+  }
+
+  private sanitizeAsciiFileName(value: string) {
+    return value
+      .normalize('NFKD')
+      .replace(/[^\x20-\x7E]/g, '')
+      .replace(/[^a-zA-Z0-9_-]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  private buildPdfDocument(lines: string[]) {
+    return new Promise<Buffer>((resolve, reject) => {
+      const chunks: Buffer[] = [];
+      const document = new PDFDocument({
+        size: 'A4',
+        margin: 40,
+        info: {
+          Title: 'Participant report',
+          Author: 'eFinder backend',
+        },
+      });
+
+      document.registerFont(
+        'ReportFont',
+        '/System/Library/Fonts/Supplemental/Arial Unicode.ttf',
+      );
+      document.font('ReportFont');
+      document.fontSize(11);
+
+      document.on('data', (chunk: Buffer) => {
+        chunks.push(chunk);
+      });
+      document.on('end', () => {
+        resolve(Buffer.concat(chunks));
+      });
+      document.on('error', reject);
+
+      for (const line of lines) {
+        if (line === '') {
+          document.moveDown(0.4);
+          continue;
+        }
+
+        if (/^(Profile|Summary|Scores by direction|Event history)$/.test(line)) {
+          document.font('ReportFont').fontSize(13).text(line);
+          document.moveDown(0.2);
+          document.font('ReportFont').fontSize(11);
+          continue;
+        }
+
+        document.text(line, {
+          width: 515,
+        });
+      }
+
+      document.end();
+    });
   }
 }
