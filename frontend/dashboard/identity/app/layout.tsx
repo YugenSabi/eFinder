@@ -1,8 +1,9 @@
 import localFont from 'next/font/local';
 import type { Metadata } from 'next';
-import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, getLocale} from 'next-intl/server';
 import type { ReactNode } from 'react';
+import {AppProviders} from './providers';
+import {getServerCurrentUser} from '../lib/kratos/server';
 import './globals.css';
 
 const underratedFont = localFont({
@@ -31,13 +32,14 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const currentUser = await getServerCurrentUser();
 
   return (
     <html lang={locale}>
       <body className={`${underratedFont.variable} ${geologicaFont.variable} ${delaGothicOneFont.variable}`}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <AppProviders locale={locale} messages={messages} initialUser={currentUser}>
           {children}
-        </NextIntlClientProvider>
+        </AppProviders>
       </body>
     </html>
   );

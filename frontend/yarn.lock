@@ -445,13 +445,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@identity/login@workspace:dashboard/identity/fragments/login"
   dependencies:
+    "@hookform/resolvers": "npm:^3.10.0"
     "@ui/button": "npm:*"
     "@ui/input": "npm:*"
     "@ui/layout": "npm:*"
     "@ui/text": "npm:*"
+    next: "npm:^16.2.1"
     next-intl: "npm:^4.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
+    react-hook-form: "npm:^7.54.2"
+    zod: "npm:^3.24.2"
   languageName: unknown
   linkType: soft
 

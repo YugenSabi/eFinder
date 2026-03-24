@@ -5,8 +5,7 @@
       "events": "Мероприятия",
       "activity": "Активность",
       "rating": "Рейтинг",
-      "docs": "Docs",
-      "launch": "Launch"
+      "login": "Войти"
     },
     "footer": {
       "copyright": "© eFinder, 2026",
@@ -24,7 +23,7 @@
   },
   "Auth": {
     "registration": {
-      "title": "Здесь все начинается!",
+      "title": "Регистрация",
       "email": {
         "label": "Почта",
         "placeholder": "example@gmail.com"
@@ -41,7 +40,13 @@
         "label": "Повторите пароль",
         "placeholder": "********"
       },
-      "submit": "Зарегистрироваться"
+      "submit": "Зарегистрироваться",
+      "loading": "Создаем аккаунт...",
+      "errorDefault": "Не удалось завершить регистрацию",
+      "cta": {
+        "text": "Уже есть аккаунт?",
+        "action": "Войти"
+      }
     },
     "login": {
       "title": "Вход",
@@ -53,7 +58,40 @@
         "label": "Пароль",
         "placeholder": "********"
       },
-      "submit": "Войти"
+      "submit": "Войти",
+      "loading": "Выполняем вход...",
+      "errorDefault": "Не удалось выполнить вход",
+      "cta": {
+        "text": "Нет аккаунта?",
+        "action": "Регистрация"
+      }
+    },
+    "confirm": {
+      "title": "Подтверждение почты",
+      "description": "Введите код из письма, чтобы открыть доступ к профилю.",
+      "code": {
+        "label": "Код подтверждения",
+        "placeholder": "123456"
+      },
+      "submit": "Подтвердить",
+      "loading": "Проверяем код...",
+      "resend": "Отправить код повторно",
+      "resendLoading": "Отправляем код...",
+      "errorDefault": "Не удалось подтвердить почту",
+      "verificationSyncError": "Код принят, но статус подтверждения еще не обновился"
+    },
+    "profile": {
+      "title": "Профиль",
+      "success": "Поздравляем, вы вошли в аккаунт",
+      "blockedTitle": "Почта не подтверждена",
+      "blockedDescription": "Чтобы открыть профиль, введите код из письма.",
+      "goToConfirm": "Ввести код",
+      "goToLogin": "Войти",
+      "logout": "Выйти из аккаунта",
+      "logoutLoading": "Выходим...",
+      "email": "Почта",
+      "statusVerified": "Почта подтверждена",
+      "statusPending": "Ожидает подтверждения"
     }
   }
 }

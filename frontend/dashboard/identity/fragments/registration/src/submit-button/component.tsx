@@ -4,10 +4,12 @@ import { useTranslations } from 'next-intl';
 
 type SubmitButtonComponentProps = {
   buttonProps?: Omit<ButtonProps, 'label'>;
+  label?: string;
 };
 
 export function SubmitButtonComponent({
   buttonProps,
+  label,
 }: SubmitButtonComponentProps) {
   const t = useTranslations('Auth.registration');
 
@@ -15,7 +17,7 @@ export function SubmitButtonComponent({
     <Button
       bg="contrastColor"
       font="headerNav"
-      label={t('submit')}
+      label={label ?? t('submit')}
       fullWidth
       {...buttonProps}
     />
