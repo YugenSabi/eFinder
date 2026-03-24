@@ -1,0 +1,19 @@
+{
+  "name": "@identity/login",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
+    "@ui/button": "*",
+    "@ui/input": "*",
+    "@ui/layout": "*",
+    "@ui/text": "*",
+    "next": "^16.2.1",
+    "next-intl": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.2",
+    "zod": "^3.24.2"
+  }
+}

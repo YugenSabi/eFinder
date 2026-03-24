@@ -1,0 +1,30 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "dashboard/identity",
+    "dashboard/identity/fragments/*",
+    "ui/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace @dashboard/identity dev",
+    "build": "yarn workspace @dashboard/identity build",
+    "start": "yarn workspace @dashboard/identity start",
+    "lint": "yarn workspace @dashboard/identity lint",
+    "typecheck": "yarn workspace @dashboard/identity typecheck",
+    "check": "yarn lint && yarn typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "generate:fragment": "node ./tools/generate.js fragment",
+    "generate:ui": "node ./tools/generate.js ui",
+    "generate:page": "node ./tools/generate.js page"
+  },
+  "resolutions": {
+    "axios": "1.13.5"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  },
+  "packageManager": "yarn@4.6.0"
+}
