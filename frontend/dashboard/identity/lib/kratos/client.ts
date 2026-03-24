@@ -111,7 +111,6 @@ export async function submitRegistrationFlow(params: {
       email: params.email,
       first_name: params.firstName,
       last_name: params.lastName,
-      role: 'participant',
     },
   });
 }
@@ -296,4 +295,3 @@ function resolveKratosError(payload: unknown) {
 
   return null;
 }
-

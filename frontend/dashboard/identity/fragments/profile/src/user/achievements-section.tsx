@@ -20,7 +20,7 @@ export function ProfileAchievementsSection({
         padding={10}
         borderRadius={18}
         backgroundColor="cardBg"
-        style={{boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)',}}
+        style={{ boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }}
       >
         {achievements.map((item, index) => (
           <Box

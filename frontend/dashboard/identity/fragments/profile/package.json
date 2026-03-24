@@ -8,6 +8,7 @@
     "@ui/button": "*",
     "@ui/layout": "*",
     "@ui/text": "*",
+    "next": "^16.2.1",
     "next-intl": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

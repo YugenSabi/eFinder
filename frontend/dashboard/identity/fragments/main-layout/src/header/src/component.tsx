@@ -11,7 +11,7 @@ import {HEADER_HEIGHT_PX} from './constants';
 export function MainHeader() {
   const t = useTranslations('MainLayout.header');
   const router = useRouter();
-  const {currentUser} = useAuth();
+  const {currentUser, isAuthResolved} = useAuth();
 
   return (
     <Box
@@ -85,7 +85,9 @@ export function MainHeader() {
       </Box>
       <Box position="relative" zIndex={1} gap={12} alignItems="center">
         <BellIcon />
-        {currentUser ? (
+        {!isAuthResolved ? (
+          <Box width={40} height={40} />
+        ) : currentUser ? (
           <Box cursor="pointer" onClick={() => router.push('/profile')}>
             <UserIcon />
           </Box>
