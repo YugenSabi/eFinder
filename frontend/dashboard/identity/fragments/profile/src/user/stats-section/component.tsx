@@ -1,6 +1,6 @@
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import type { StatPoint } from './model';
+import type { StatPoint } from '../model';
 
 function RadarChart({ points }: { points: StatPoint[] }) {
   const size = 300;
@@ -85,7 +85,7 @@ export function ProfileStatsSection({ stats }: { stats: StatPoint[] }) {
   return (
     <Box direction="column" gap={12} style={{ flex: '1 1 420px', minWidth: 360 }}>
       <Box justifyContent="center" alignItems="center">
-        <Text as="h2" font="headerNav" fontSize={32}>
+        <Text font="headerNav" fontSize={32}>
           Статистика направлений
         </Text>
       </Box>

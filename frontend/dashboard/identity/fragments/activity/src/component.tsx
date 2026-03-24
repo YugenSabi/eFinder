@@ -1,9 +1,9 @@
 import { MainLayoutComponent } from '@identity/main-layout';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import { ActivityChart } from './components/activity-chart';
-import { PopularTagsSection } from './components/popular-tags-section';
-import { RecentEventsCarousel } from './components/recent-events-carousel';
+import { ActivityChart } from './activity-chart';
+import { PopularTagsSection } from './popular-tags-section';
+import { RecentEventsCarousel } from './recent-events-carousel';
 import { activitySeries, popularTags, recentEvents } from './model';
 
 export function ActivityComponent() {

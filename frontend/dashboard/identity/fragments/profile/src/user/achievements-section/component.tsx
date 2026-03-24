@@ -1,6 +1,6 @@
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import type { AchievementRow } from './model';
+import type { AchievementRow } from '../model';
 
 export function ProfileAchievementsSection({
   achievements,
@@ -10,7 +10,7 @@ export function ProfileAchievementsSection({
   return (
     <Box direction="column" gap={12} style={{ flex: '1 1 520px', minWidth: 380 }}>
       <Box justifyContent="center" alignItems="center">
-        <Text as="h2" font="headerNav" fontSize={32}>
+        <Text font="headerNav" fontSize={32}>
           Портфолио достижений
         </Text>
       </Box>

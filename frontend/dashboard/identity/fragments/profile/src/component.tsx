@@ -21,7 +21,14 @@ export function ProfileComponent() {
   if (!isAuthResolved) {
     return (
       <MainLayoutComponent>
-        <Box as="main" width="$full" justifyContent="center" alignItems="center" paddingTop={48} paddingBottom={48}>
+        <Box
+          as="main"
+          width="$full"
+          justifyContent="center"
+          alignItems="center"
+          paddingTop={48}
+          paddingBottom={48}
+        >
           <Text as="span">{t('title')}</Text>
         </Box>
       </MainLayoutComponent>
@@ -31,8 +38,22 @@ export function ProfileComponent() {
   if (!currentUser) {
     return (
       <MainLayoutComponent>
-        <Box as="main" width="$full" justifyContent="center" alignItems="center" paddingTop={48} paddingBottom={48}>
-          <Box direction="column" width="$full" maxWidth={520} gap={16} padding={32} surface="card">
+        <Box
+          as="main"
+          width="$full"
+          justifyContent="center"
+          alignItems="center"
+          paddingTop={48}
+          paddingBottom={48}
+        >
+          <Box
+            direction="column"
+            width="$full"
+            maxWidth={520}
+            gap={16}
+            padding={32}
+            surface="card"
+          >
             <Text as="h1" font="headerNav" fontSize={38}>
               {t('title')}
             </Text>
@@ -61,8 +82,22 @@ export function ProfileComponent() {
   if (!currentUser.isVerified) {
     return (
       <MainLayoutComponent>
-        <Box as="main" width="$full" justifyContent="center" alignItems="center" paddingTop={48} paddingBottom={48}>
-          <Box direction="column" width="$full" maxWidth={520} gap={16} padding={32} surface="card">
+        <Box
+          as="main"
+          width="$full"
+          justifyContent="center"
+          alignItems="center"
+          paddingTop={48}
+          paddingBottom={48}
+        >
+          <Box
+            direction="column"
+            width="$full"
+            maxWidth={520}
+            gap={16}
+            padding={32}
+            surface="card"
+          >
             <Text as="h1" font="headerNav" fontSize={38}>
               {t('blockedTitle')}
             </Text>
@@ -87,10 +122,8 @@ export function ProfileComponent() {
 
   const shouldShowOrganizerProfile =
     currentUser.role === 'ORGANIZER' ||
-    (
-      currentUser.role === 'PARTICIPANT' &&
-      Boolean(currentUser.organizerProfile)
-    );
+    (currentUser.role === 'PARTICIPANT' &&
+      Boolean(currentUser.organizerProfile));
 
   return (
     <MainLayoutComponent>

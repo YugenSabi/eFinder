@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react';
-import {MainLayoutComponent} from '@identity/main-layout';
+import {RatingComponent} from '@identity/rating';
 
 export default function RatingPage(): ReactNode {
-  return <MainLayoutComponent />;
+  return <RatingComponent />;
 }

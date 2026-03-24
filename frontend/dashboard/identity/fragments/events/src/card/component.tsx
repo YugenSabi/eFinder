@@ -21,7 +21,7 @@ export function CardComponent({ event }: CardComponentProps) {
   const router = useRouter();
 
   return (
-    <Box gap={10} alignItems="flex-start" style={{ flexWrap: 'nowrap' }}>
+    <Box gap={10} alignItems="flex-start" style={{ flexWrap: 'nowrap', boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }} padding={10} borderRadius={20}>
       <Box
         width={220}
         minWidth={220}

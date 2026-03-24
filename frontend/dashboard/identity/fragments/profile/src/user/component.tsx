@@ -40,7 +40,10 @@ export function UserProfileComponent({
     lastName: currentUser.lastName ?? '',
     headline: currentUser.headline ?? '',
     portfolioSummary: currentUser.participantProfile?.portfolioSummary ?? '',
-    age: currentUser.age !== null && currentUser.age !== undefined ? String(currentUser.age) : '',
+    age:
+      currentUser.age !== null && currentUser.age !== undefined
+        ? String(currentUser.age)
+        : '',
     school: currentUser.school ?? '',
     city: currentUser.city ?? '',
     telegram: currentUser.telegram ?? '',
@@ -92,14 +95,23 @@ export function UserProfileComponent({
       });
       onProfileUpdated(updatedUser);
     } catch (error) {
-      setSaveError(error instanceof Error ? error.message : 'Не удалось сохранить профиль');
+      setSaveError(
+        error instanceof Error ? error.message : 'Не удалось сохранить профиль',
+      );
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <Box as="main" direction="column" width="$full" gap={28} paddingTop={34} paddingBottom={40}>
+    <Box
+      as="main"
+      direction="column"
+      width="$full"
+      gap={28}
+      paddingTop={34}
+      paddingBottom={40}
+    >
       <ProfileOverviewSection
         profile={profile}
         form={form}
@@ -141,7 +153,9 @@ export function UserProfileComponent({
               setForm((current) => ({ ...current, avatarUrl }));
             } catch (error) {
               setSaveError(
-                error instanceof Error ? error.message : 'Не удалось загрузить аватар',
+                error instanceof Error
+                  ? error.message
+                  : 'Не удалось загрузить аватар',
               );
             }
           }}

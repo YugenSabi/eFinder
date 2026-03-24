@@ -12,15 +12,12 @@ import { uploadImage } from '../../../../lib/uploads/client';
 import { updateOrganizerProfile } from '../../../../lib/kratos';
 
 type OrganizerProfileComponentProps = {
-  loggingOut: boolean;
-  onLogout: () => void | Promise<void>;
+  currentUser: NonNullable<AuthUser>;
 };
 
 export function OrganizerProfileComponent({
-  loggingOut,
-  onLogout,
+  currentUser,
 }: OrganizerProfileComponentProps) {
-  const t = useTranslations('Auth.profile');
   const router = useRouter();
   const { currentUser, setCurrentUser } = useAuth();
   const [saving, setSaving] = useState(false);
@@ -53,7 +50,14 @@ export function OrganizerProfileComponent({
   }
 
   return (
-    <Box as="main" direction="column" width="$full" gap={24} paddingTop={34} paddingBottom={40}>
+    <Box
+      as="main"
+      direction="column"
+      width="$full"
+      gap={24}
+      paddingTop={34}
+      paddingBottom={40}
+    >
       <Box direction="column" gap={8}>
         <Text as="h1" font="headerNav" fontSize={38}>
           {organizerProfile.organizationName || t('organizer.title')}
@@ -107,7 +111,8 @@ export function OrganizerProfileComponent({
           {t('organizer.totalEvents')}: {organizerProfile.totalEvents}
         </Text>
         <Text as="span">
-          {t('organizer.rank')}: {organizerProfile.organizationRank ?? t('organizer.noRank')}
+          {t('organizer.rank')}:{' '}
+          {organizerProfile.organizationRank ?? t('organizer.noRank')}
         </Text>
         <Box direction="column" gap={6}>
           <Text as="span" font="headerNav" fontSize={18}>
@@ -163,7 +168,9 @@ export function OrganizerProfileComponent({
                 setForm((current) => ({ ...current, logoUrl }));
               } catch (error) {
                 setSaveError(
-                  error instanceof Error ? error.message : 'Не удалось загрузить логотип',
+                  error instanceof Error
+                    ? error.message
+                    : 'Не удалось загрузить логотип',
                 );
               }
             }}
@@ -210,7 +217,11 @@ export function OrganizerProfileComponent({
           />
         ) : null}
         <Button
-          label={saving ? 'Сохраняем данные организации...' : 'Сохранить данные организации'}
+          label={
+            saving
+              ? 'Сохраняем данные организации...'
+              : 'Сохранить данные организации'
+          }
           bg="contrastColor"
           font="headerNav"
           disabled={saving}
@@ -222,7 +233,9 @@ export function OrganizerProfileComponent({
               setCurrentUser(updatedUser);
             } catch (error) {
               setSaveError(
-                error instanceof Error ? error.message : 'Не удалось сохранить организацию',
+                error instanceof Error
+                  ? error.message
+                  : 'Не удалось сохранить организацию',
               );
             } finally {
               setSaving(false);

@@ -2,7 +2,7 @@ import { Button } from '@ui/button';
 import { Input } from '@ui/input';
 import { Box } from '@ui/layout';
 import { Text } from '@ui/text';
-import type { ProfileViewModel } from './model';
+import type { ProfileViewModel } from '../model';
 
 export function ProfileOverviewSection({
   profile,
@@ -73,7 +73,12 @@ export function ProfileOverviewSection({
         shadow="soft"
         style={{ minWidth: 360, boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }}
       >
-        <Box gap={22} justifyContent="space-between" alignItems="stretch" style={{ flexWrap: 'wrap' }}>
+        <Box
+          gap={22}
+          justifyContent="space-between"
+          alignItems="stretch"
+          style={{ flexWrap: 'wrap' }}
+        >
           <Box direction="column" gap={10} style={{ flex: '1 1 340px' }}>
             <Text font="headerNav" fontSize={20}>
               {profile.fullName}
@@ -87,43 +92,57 @@ export function ProfileOverviewSection({
             <Box gap={24} style={{ flexWrap: 'wrap' }}>
               <Box direction="column" gap={8} style={{ flex: '1 1 200px' }}>
                 <Text font="headerNav" fontSize={15}>
-                  Личная информация
+                  Личная информация:
                 </Text>
                 <Input
                   label="Имя"
                   value={form.firstName}
-                  onChange={(event) => onFieldChange('firstName', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('firstName', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Фамилия"
                   value={form.lastName}
-                  onChange={(event) => onFieldChange('lastName', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('lastName', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Краткое описание"
                   value={form.headline}
-                  onChange={(event) => onFieldChange('headline', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('headline', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Описание"
                   value={form.portfolioSummary}
-                  onChange={(event) => onFieldChange('portfolioSummary', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('portfolioSummary', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Возраст"
                   type="number"
                   value={form.age}
-                  onChange={(event) => onFieldChange('age', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('age', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Школа / организация"
                   value={form.school}
-                  onChange={(event) => onFieldChange('school', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('school', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Город"
                   value={form.city}
-                  onChange={(event) => onFieldChange('city', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('city', event.currentTarget.value)
+                  }
                 />
               </Box>
               <Box direction="column" gap={8} style={{ flex: '1 1 220px' }}>
@@ -133,22 +152,30 @@ export function ProfileOverviewSection({
                 <Input
                   label="Telegram"
                   value={form.telegram}
-                  onChange={(event) => onFieldChange('telegram', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('telegram', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Github"
                   value={form.githubUrl}
-                  onChange={(event) => onFieldChange('githubUrl', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('githubUrl', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="Behance"
                   value={form.behanceUrl}
-                  onChange={(event) => onFieldChange('behanceUrl', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('behanceUrl', event.currentTarget.value)
+                  }
                 />
                 <Input
                   label="VK"
                   value={form.vkUrl}
-                  onChange={(event) => onFieldChange('vkUrl', event.currentTarget.value)}
+                  onChange={(event) =>
+                    onFieldChange('vkUrl', event.currentTarget.value)
+                  }
                 />
               </Box>
             </Box>
@@ -208,7 +235,11 @@ export function ProfileOverviewSection({
                   padding={8}
                   borderRadius={18}
                   backgroundColor={item.highlight ? 'background' : 'cardBg'}
-                  border={item.highlight ? '1px solid rgba(68, 126, 173, 0.45)' : undefined}
+                  border={
+                    item.highlight
+                      ? '1px solid rgba(68, 126, 173, 0.45)'
+                      : undefined
+                  }
                   gap={12}
                   style={{ boxShadow: '-3px 3px 3px rgba(0, 0, 0, 0.25)' }}
                 >
