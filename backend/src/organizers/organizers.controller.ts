@@ -1,45 +1,47 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
   Patch,
   Param,
-  Delete,
+  Body,
+  Req,
 } from '@nestjs/common';
+import {ApiTags} from '@nestjs/swagger';
+import type {Request} from 'express';
+import {AuthService} from '../auth/auth.service';
 import { OrganizersService } from './organizers.service';
-import { CreateOrganizerDto } from './dto/create-organizer.dto';
 import { UpdateOrganizerDto } from './dto/update-organizer.dto';
 
+@ApiTags('organizers')
 @Controller('organizers')
 export class OrganizersController {
-  constructor(private readonly organizersService: OrganizersService) {}
+  constructor(
+    private readonly organizersService: OrganizersService,
+    private readonly authService: AuthService,
+  ) {}
 
-  @Post()
-  create(@Body() createOrganizerDto: CreateOrganizerDto) {
-    return this.organizersService.create(createOrganizerDto);
+  @Get('candidates')
+  async findAll(@Req() request: Request) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+
+    return this.organizersService.findAll(currentUser);
   }
 
-  @Get()
-  findAll() {
-    return this.organizersService.findAll();
-  }
+  @Get('approved')
+  async findApproved(@Req() request: Request) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.organizersService.findOne(+id);
+    return this.organizersService.findApproved(currentUser);
   }
 
   @Patch(':id')
-  update(
+  async update(
+    @Req() request: Request,
     @Param('id') id: string,
     @Body() updateOrganizerDto: UpdateOrganizerDto,
   ) {
-    return this.organizersService.update(+id, updateOrganizerDto);
-  }
+    const currentUser = await this.authService.getAuthenticatedUser(request);
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.organizersService.remove(+id);
+    return this.organizersService.update(currentUser, id, updateOrganizerDto);
   }
 }

@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import {ForbiddenException, Injectable} from '@nestjs/common';
+import {type User, UserRole} from '@prisma/client';
+import {PrismaService} from '../prisma/prisma.service';
 import { CreateAdminSettingDto } from './dto/create-admin-setting.dto';
-import { UpdateAdminSettingDto } from './dto/update-admin-setting.dto';
 
 @Injectable()
 export class AdminSettingsService {
-  create(createAdminSettingDto: CreateAdminSettingDto) {
-    return { action: 'create', payload: createAdminSettingDto };
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   findAll() {
-    return { items: [] };
+    return this.prismaService.eventScoreWeight.findMany({
+      orderBy: [{direction: 'asc'}, {difficulty: 'asc'}],
+    });
   }
 
-  findOne(id: number) {
-    return { id };
+  async replace(currentUser: User, createAdminSettingDto: CreateAdminSettingDto) {
+    this.assertCanManageSettings(currentUser);
+
+    await this.prismaService.$transaction([
+      this.prismaService.eventScoreWeight.deleteMany(),
+      ...createAdminSettingDto.items.map((item) =>
+        this.prismaService.eventScoreWeight.create({
+          data: {
+            direction: item.direction,
+            difficulty: item.difficulty,
+            weight: item.weight,
+          },
+        }),
+      ),
+    ]);
+
+    return this.findAll();
   }
 
-  update(id: number, updateAdminSettingDto: UpdateAdminSettingDto) {
-    return { action: 'update', id, payload: updateAdminSettingDto };
-  }
-
-  remove(id: number) {
-    return { action: 'remove', id };
+  private assertCanManageSettings(currentUser: User) {
+    if (currentUser.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('Only admin can manage score settings');
+    }
   }
 }

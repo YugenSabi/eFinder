@@ -1,47 +1,51 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
-  Param,
   Delete,
+  Param,
+  Post,
+  Query,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
+import { AuthService } from '../auth/auth.service';
+import { ListObserverParticipantsDto } from './dto/list-observer-participants.dto';
 import { ReserveInspectorService } from './reserve-inspector.service';
-import { CreateReserveInspectorDto } from './dto/create-reserve-inspector.dto';
-import { UpdateReserveInspectorDto } from './dto/update-reserve-inspector.dto';
 
 @Controller('reserve-inspector')
 export class ReserveInspectorController {
   constructor(
     private readonly reserveInspectorService: ReserveInspectorService,
+    private readonly authService: AuthService,
   ) {}
 
-  @Post()
-  create(@Body() createReserveInspectorDto: CreateReserveInspectorDto) {
-    return this.reserveInspectorService.create(createReserveInspectorDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.reserveInspectorService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reserveInspectorService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateReserveInspectorDto: UpdateReserveInspectorDto,
+  @Get('participants')
+  async listParticipants(
+    @Req() request: Request,
+    @Query() query: ListObserverParticipantsDto,
   ) {
-    return this.reserveInspectorService.update(+id, updateReserveInspectorDto);
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+
+    return this.reserveInspectorService.listParticipants(currentUser, query);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reserveInspectorService.remove(+id);
+  @Post('favorites/:participantId')
+  async addFavorite(
+    @Req() request: Request,
+    @Param('participantId') participantId: string,
+  ) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+
+    return this.reserveInspectorService.addFavorite(currentUser, participantId);
+  }
+
+  @Delete('favorites/:participantId')
+  async removeFavorite(
+    @Req() request: Request,
+    @Param('participantId') participantId: string,
+  ) {
+    const currentUser = await this.authService.getAuthenticatedUser(request);
+
+    return this.reserveInspectorService.removeFavorite(currentUser, participantId);
   }
 }

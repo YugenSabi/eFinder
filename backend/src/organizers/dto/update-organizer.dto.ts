@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateOrganizerDto } from './create-organizer.dto';
+import {UserRole} from '@prisma/client';
+import {IsEnum} from 'class-validator';
 
-export class UpdateOrganizerDto extends PartialType(CreateOrganizerDto) {}
+export class UpdateOrganizerDto {
+  @IsEnum(UserRole)
+  role!: UserRole;
+}
